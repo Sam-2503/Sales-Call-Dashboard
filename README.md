@@ -23,3 +23,16 @@ configured filler counts, longest monologue, indicative customer-to-agent respon
 delays, and optional energy-based dead-air flags from a normalized audio file.
 Interruptions are intentionally unavailable in v1 because sequential transcript
 segments cannot establish overlapping speech honestly.
+
+## Playbook inspection
+
+Stage 6a supports network-free inspection of a playbook specification and PDF:
+
+```bash
+uv run call-analyser playbook inspect playbooks/<slug>/playbook.yaml
+uv run call-analyser playbook inspect playbooks/<slug>/playbook.yaml --json
+```
+
+Extraction is deterministic, removes repeated headers and page numbers, detects
+chapters, applies configured page offsets, and creates stable chapter-local
+chunks. Indexing and embeddings are intentionally not performed by `inspect`.

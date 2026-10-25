@@ -28,6 +28,18 @@ class PlaybookPassage(BaseModel):
     score: float = Field(ge=0, le=1)
 
 
+class PlaybookChapter(BaseModel):
+    title: str = Field(min_length=1)
+    start_page: int = Field(ge=1)
+    end_page: int = Field(ge=1)
+
+    @model_validator(mode="after")
+    def ordered_pages(self) -> PlaybookChapter:
+        if self.start_page > self.end_page:
+            raise ValueError("start_page must not exceed end_page")
+        return self
+
+
 class PlaybookRef(BaseModel):
     passage_id: str = Field(min_length=1)
     book_title: str = Field(min_length=1)
