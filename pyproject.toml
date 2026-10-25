@@ -15,8 +15,7 @@ eval = ["scikit-learn==1.8.0"]
 dev = ["mypy==1.19.1", "ruff==0.15.5"]
 
 [tool.hatch.build.targets.wheel]
-only-include = ["src"]
-sources = ["src"]
+packages = ["src/call_analyser"]
 
 [tool.ruff]
 target-version = "py311"

@@ -18,10 +18,10 @@ make check
 ```
 
 ## Layout
-- `src/`: flat importable analysis modules and focused subpackages.
-- `src/schemas/`: public Pydantic contracts.
-- `src/prompts/`: versioned prompt resources.
-- `src/playbook/`: extraction, indexing and retrieval.
+- `src/call_analyser/`: importable analysis package.
+- `src/call_analyser/schemas/`: public Pydantic contracts.
+- `src/call_analyser/prompts/`: versioned prompt resources.
+- `src/call_analyser/playbook/`: extraction, indexing and retrieval.
 
 ## Conventions
 - Use float seconds internally; format only at the edge.

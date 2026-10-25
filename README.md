@@ -8,10 +8,10 @@ This repository contains the analysis core. A FastAPI backend owns uploads,
 authentication, job state, and persistence. A React frontend consumes the
 schema-valid `CallReport` returned by the analysis service.
 
-The source layout is intentionally flat for backend integration:
+The analysis core is exposed as a regular package for backend integration:
 
 ```python
-from pipeline import AnalyseInput, analyse_call
+from call_analyser.pipeline import AnalyseInput, analyse_call
 ```
 
 The backend writes an uploaded recording to managed temporary storage, invokes
