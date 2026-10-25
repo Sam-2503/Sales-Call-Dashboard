@@ -61,6 +61,23 @@ Retrieval strips the stored embedding header, returns passage IDs and citation
 metadata, and applies `PLAYBOOK_TOP_K`/`PLAYBOOK_MIN_SCORE` defaults. The
 analysis path only embeds the query; it never adds or re-embeds documents.
 
+## Stage 10 end-to-end analysis
+
+The assembled pipeline supports offline fake mode:
+
+```bash
+uv run call-analyser analyse recording.wav \
+  --rubric rubrics/sales_v1.yaml \
+  --fake \
+  --no-grounding
+```
+
+Normal analysis requires a pre-indexed playbook when grounding is enabled.
+The pipeline validates the rubric and index before ingesting audio, returns an
+`insufficient_data` report for calls below configured thresholds, and emits
+schema-valid JSON. `stream_analysis` exposes progress events for application
+integrations.
+
 ## Stage 7 analysis stages
 
 The Stage 7 chains `rubric_results`, `missed_moments`, and `customer_signals`
@@ -103,3 +120,15 @@ uv run call-analyser evaluate --cases eval/report_cases.yaml
 The harness reports rubric status accuracy, missed-moment recall, evidence
 validity, and mean absolute score error. Evaluation inputs and report fixtures
 are intentionally kept separate from production analysis.
+
+## Public contract and import safety
+
+The report contract is maintained in `schemas/call_report.schema.json` and can
+be regenerated with:
+
+```bash
+uv run call-analyser export-schema
+```
+
+Imports are side-effect free: no network calls, database access, indexing, or
+PDF reads occur until the relevant command or function is invoked.

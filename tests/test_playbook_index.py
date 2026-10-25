@@ -5,6 +5,7 @@ from reportlab.pdfgen.canvas import Canvas
 
 from call_analyser.config import Settings
 from call_analyser.playbook import index_playbook, load_playbook_spec, open_playbook
+from call_analyser.playbook.embedder import FakeEmbeddings
 
 
 def _fixture(tmp_path: Path) -> tuple[Path, Settings]:
@@ -57,3 +58,12 @@ def test_open_missing_index_fails_with_remediation(tmp_path: Path) -> None:
         assert "playbook index" in str(error)
     else:
         raise AssertionError("expected missing-index failure")
+
+
+def test_fake_embeddings_reject_non_positive_dimensions() -> None:
+    try:
+        FakeEmbeddings(0)
+    except ValueError as error:
+        assert "positive" in str(error)
+    else:
+        raise AssertionError("expected invalid dimension failure")

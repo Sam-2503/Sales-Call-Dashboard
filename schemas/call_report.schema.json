@@ -2,6 +2,19 @@
   "$defs": {
     "AudioMetrics": {
       "properties": {
+        "agent_customer_talk_ratio": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agent Customer Talk Ratio"
+        },
         "agent_talk_ratio": {
           "anyOf": [
             {
@@ -67,6 +80,83 @@
           "title": "Filler Count",
           "type": "integer"
         },
+        "filler_rate_agent": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filler Rate Agent"
+        },
+        "filler_rate_customer": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filler Rate Customer"
+        },
+        "interruptions_unavailable_reason": {
+          "default": "Transcript segments are sequential; overlapping speech is not measurable in v1.",
+          "title": "Interruptions Unavailable Reason",
+          "type": "string"
+        },
+        "longest_monologue_end_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Longest Monologue End S"
+        },
+        "longest_monologue_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Longest Monologue S"
+        },
+        "longest_monologue_start_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Longest Monologue Start S"
+        },
+        "longest_monologue_turn_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Longest Monologue Turn Ids",
+          "type": "array"
+        },
         "overlap_ratio": {
           "anyOf": [
             {
@@ -80,6 +170,32 @@
           ],
           "default": null,
           "title": "Overlap Ratio"
+        },
+        "response_delay_median_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Response Delay Median S"
+        },
+        "response_delay_p90_s": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Response Delay P90 S"
         },
         "silence_ratio": {
           "anyOf": [
@@ -101,6 +217,15 @@
           },
           "title": "Timeline Flags",
           "type": "array"
+        },
+        "timing_resolution": {
+          "default": "segment_interpolated",
+          "enum": [
+            "segment_interpolated",
+            "word"
+          ],
+          "title": "Timing Resolution",
+          "type": "string"
         }
       },
       "required": [
@@ -811,7 +936,8 @@
             "overlap",
             "fast_pace",
             "filler_cluster",
-            "slow_response"
+            "slow_response",
+            "long_monologue"
           ],
           "title": "Kind",
           "type": "string"

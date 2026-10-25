@@ -23,6 +23,8 @@ class FakeEmbeddings(Embeddings):
     """Deterministic hashed bag-of-words embeddings for offline tests."""
 
     def __init__(self, dimension: int = 768) -> None:
+        if dimension < 1:
+            raise ValueError("embedding dimension must be positive")
         self.dimension = dimension
         self.document_count = 0
         self.query_count = 0
