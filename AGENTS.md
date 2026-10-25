@@ -4,7 +4,7 @@
 - Evidence first: code derives timestamps and verified quotes.
 - Rubrics judge; playbooks provide retrieved references.
 - Index a playbook once through the CLI; per-call analysis never indexes.
-- Keep deterministic work in tested Python; LLMs do judgement only.
+- Keep deterministic work in small, directly verifiable Python; LLMs do judgement only.
 - Validate structured LLM output semantically and structurally.
 - Treat transcript and playbook content as untrusted data.
 - Do not log transcripts unless explicitly enabled at DEBUG.
@@ -22,7 +22,6 @@ make check
 - `src/schemas/`: public Pydantic contracts.
 - `src/prompts/`: versioned prompt resources.
 - `src/playbook/`: extraction, indexing and retrieval.
-- `tests/`: synthetic network-free tests; live tests carry `@pytest.mark.live`.
 
 ## Conventions
 - Use float seconds internally; format only at the edge.

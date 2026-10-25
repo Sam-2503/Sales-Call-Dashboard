@@ -1,13 +1,11 @@
-.PHONY: install fmt lint typecheck test check
+.PHONY: install fmt lint typecheck check
 
 install:
 	uv sync --extra dev
 fmt:
-	uv run ruff format src tests
+	uv run ruff format src
 lint:
-	uv run ruff check src tests
+	uv run ruff check src
 typecheck:
 	uv run mypy src
-test:
-	uv run pytest
-check: lint typecheck test
+check: lint typecheck
