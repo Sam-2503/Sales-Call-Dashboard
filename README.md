@@ -79,3 +79,13 @@ and timestamps with exact transcript-derived values. Failed matches may be
 repaired at most twice; unsupported findings are dropped and counted rather
 than shown. Confidence buckets are deterministic and depend on repair attempt,
 match score, and model confidence.
+
+## Stage 9 grounding and scoring
+
+Verified missed moments are ranked deterministically by severity, rubric weight,
+and confidence before the configured cap is applied. Grounding retrieves
+passages using the finding context, then allowlists model citations against the
+actual retrieved passage IDs. Invalid citations are discarded, excerpts are
+capped, and grounding can be disabled with `PLAYBOOK_GROUNDING=off` without
+performing retrieval. Rubric scoring excludes `not_applicable` items and
+reports critical missed items separately.
