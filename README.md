@@ -36,3 +36,15 @@ uv run call-analyser playbook inspect playbooks/<slug>/playbook.yaml --json
 Extraction is deterministic, removes repeated headers and page numbers, detects
 chapters, applies configured page offsets, and creates stable chapter-local
 chunks. Indexing and embeddings are intentionally not performed by `inspect`.
+
+Stage 6b adds explicit offline indexing:
+
+```bash
+uv run call-analyser playbook index playbooks/<slug>/playbook.yaml
+uv run call-analyser playbook status playbooks/<slug>/playbook.yaml
+```
+
+The index writes a manifest beside the configured Chroma directory, resumes
+interrupted batches by deterministic chunk ID, and refuses changed source PDFs
+or settings unless `--rebuild --yes` is supplied. Set `FAKE_MODE=true` for
+network-free local indexing tests.

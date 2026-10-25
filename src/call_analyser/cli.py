@@ -9,7 +9,12 @@ from typing import Any
 import typer
 
 from call_analyser.config import Settings
-from call_analyser.playbook import chunk_playbook, extract_playbook, load_playbook_spec
+from call_analyser.playbook import (
+    chunk_playbook,
+    extract_playbook,
+    index_playbook,
+    load_playbook_spec,
+)
 from call_analyser.schemas import CallReport
 
 app = typer.Typer(help="Evidence-backed sales-call analysis.")
@@ -92,3 +97,32 @@ def inspect_playbook(
                 f"chapter: {chapter['title']} "
                 f"(pages {chapter['start_page']}-{chapter['end_page']})"
             )
+
+
+@playbook_app.command("index")
+def index_playbook_command(
+    spec_path: Path,
+    rebuild: bool = typer.Option(False, "--rebuild"),
+    yes: bool = typer.Option(False, "--yes"),
+) -> None:
+    """Build or resume a persistent playbook index."""
+    spec = load_playbook_spec(spec_path)
+    manifest = index_playbook(spec, rebuild=rebuild, yes=yes)
+    typer.echo(
+        f"{manifest['status']}: {manifest['actual_chunk_count']}/"
+        f"{manifest['expected_chunk_count']} chunks"
+    )
+
+
+@playbook_app.command("status")
+def playbook_status(spec_path: Path) -> None:
+    """Print the manifest and live collection count."""
+    from call_analyser.playbook.index import manifest_path, open_playbook
+
+    spec = load_playbook_spec(spec_path)
+    path = manifest_path(spec, Settings())
+    manifest = json.loads(path.read_text()) if path.exists() else {"status": "missing"}
+    live_count = None
+    if manifest.get("status") == "complete":
+        live_count = open_playbook(spec).count()
+    typer.echo(json.dumps({"manifest": manifest, "live_collection_count": live_count}, indent=2))

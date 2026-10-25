@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     max_excerpt_words: int = Field(default=25, ge=1)
     playbook_grounding: Literal["on", "off"] = "on"
     chroma_path: Path = Path("data/chroma")
+    embedding_manifest_name: str = "playbook_manifest.json"
     chunk_target_tokens: int = Field(default=400, ge=1)
     chunk_max_tokens: int = Field(default=600, ge=1)
     chunk_overlap_tokens: int = Field(default=60, ge=0)
