@@ -1,4 +1,125 @@
-# Placeholder rubric. Stage 5 defines the complete format.
+# Placeholder only: the owner will replace this with the final rubric of about 12 items.
 id: sales_v1
 version: "0.1"
-categories: []
+name: Sales cold-call placeholder
+scoring:
+  met: 1.0
+  partial: 0.5
+  missed: 0.0
+categories:
+  - id: opening
+    name: Opening
+    weight: 0.2
+  - id: discovery
+    name: Discovery
+    weight: 0.2
+  - id: objection_handling
+    name: Objection handling
+    weight: 0.2
+  - id: compliance
+    name: Compliance
+    weight: 0.2
+  - id: closing
+    name: Closing
+    weight: 0.2
+items:
+  - id: opening_permission
+    category: opening
+    title: Ask permission to continue
+    description: The representative asks whether it is a good time to speak.
+    good_looks_like: The representative requests a brief amount of time and accepts a no.
+    common_failures:
+      - Launching into a pitch without permission
+      - Ignoring a request to stop
+    weight: 1
+    critical: false
+  - id: opening_context
+    category: opening
+    title: Establish relevant context
+    description: The representative explains why the call may be relevant.
+    good_looks_like: The opening connects the reason for calling to the prospect's role or business.
+    common_failures:
+      - Using a generic introduction
+      - Making unsupported claims
+    weight: 1
+    critical: false
+  - id: discovery_current_state
+    category: discovery
+    title: Explore the current state
+    description: The representative asks about the prospect's current process or situation.
+    good_looks_like: Open questions reveal the existing workflow and its consequences.
+    common_failures:
+      - Asking only yes-or-no questions
+      - Talking over the prospect's explanation
+    weight: 1
+    critical: false
+  - id: discovery_impact
+    category: discovery
+    title: Understand business impact
+    description: The representative identifies the cost or consequence of the situation.
+    good_looks_like: Questions connect the problem to measurable business or personal impact.
+    common_failures:
+      - Accepting a surface-level problem
+      - Assuming impact without asking
+    weight: 1
+    critical: false
+  - id: objection_acknowledge
+    category: objection_handling
+    title: Acknowledge objections
+    description: The representative demonstrates that an objection was heard.
+    good_looks_like: The representative validates the concern before responding.
+    common_failures:
+      - Arguing immediately
+      - Dismissing the concern
+    weight: 1
+    critical: false
+  - id: objection_answer
+    category: objection_handling
+    title: Respond to objections
+    description: The representative gives a relevant, concise response to the concern.
+    good_looks_like: The response addresses the stated objection and checks whether it helped.
+    common_failures:
+      - Giving an unrelated feature dump
+      - Failing to confirm resolution
+    weight: 1
+    critical: false
+  - id: compliance_consent
+    category: compliance
+    title: Respect consent and boundaries
+    description: The representative respects requests about timing, contact, and consent.
+    good_looks_like: The representative stops or adapts when the prospect sets a boundary.
+    common_failures:
+      - Continuing after an explicit stop
+      - Pressuring the prospect
+    weight: 1
+    critical: true
+  - id: compliance_claims
+    category: compliance
+    title: Keep claims supportable
+    description: The representative avoids misleading guarantees or unsupported claims.
+    good_looks_like: Claims are qualified and tied to verifiable capabilities.
+    common_failures:
+      - Promising guaranteed outcomes
+      - Inventing customer or product facts
+    weight: 1
+    critical: true
+  - id: closing_next_step
+    category: closing
+    title: Secure a clear next step
+    description: The representative proposes a specific, mutually understood next action.
+    good_looks_like: The next meeting or action has an owner and a time or scheduling commitment.
+    common_failures:
+      - Ending with a vague follow-up
+      - Leaving ownership unclear
+    weight: 1
+    critical: false
+  - id: closing_confirm
+    category: closing
+    title: Confirm commitments
+    description: The representative recaps agreed actions and checks for remaining concerns.
+    good_looks_like: The representative confirms the prospect's understanding and commitment.
+    common_failures:
+      - Assuming agreement
+      - Ending without checking for questions
+    weight: 1
+    critical: false
