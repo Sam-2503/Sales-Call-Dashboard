@@ -5,7 +5,6 @@ from reportlab.pdfgen.canvas import Canvas
 
 from config import Settings
 from playbook import index_playbook, load_playbook_spec, open_playbook
-from playbook.eval import evaluate_retrieval
 from playbook.retriever import PlaybookRetriever
 
 
@@ -20,13 +19,17 @@ def _indexed_playbook(tmp_path: Path) -> tuple[PlaybookRetriever, Settings]:
     canvas.showPage()
     canvas.save()
     spec_path = tmp_path / "playbook.yaml"
-    spec_path.write_text(yaml.safe_dump({
-        "slug": "retrieval",
-        "title": "Synthetic Retrieval",
-        "author": "Tester",
-        "edition": "1",
-        "source_pdf": "book.pdf",
-    }))
+    spec_path.write_text(
+        yaml.safe_dump(
+            {
+                "slug": "retrieval",
+                "title": "Synthetic Retrieval",
+                "author": "Tester",
+                "edition": "1",
+                "source_pdf": "book.pdf",
+            }
+        )
+    )
     settings = Settings(
         fake_mode=True,
         chroma_path=tmp_path / "chroma",
@@ -36,9 +39,7 @@ def _indexed_playbook(tmp_path: Path) -> tuple[PlaybookRetriever, Settings]:
     )
     spec = load_playbook_spec(spec_path)
     index_playbook(spec, settings)
-    return PlaybookRetriever(
-        index=open_playbook(spec, settings), top_k=2, min_score=0
-    ), settings
+    return PlaybookRetriever(index=open_playbook(spec, settings), top_k=2, min_score=0), settings
 
 
 def test_retriever_returns_id_metadata_and_strips_embedding_header(tmp_path: Path) -> None:
@@ -54,15 +55,3 @@ def test_retriever_min_score_filters_results(tmp_path: Path) -> None:
     retriever, _ = _indexed_playbook(tmp_path)
     retriever.min_score = 1.1
     assert retriever.invoke("workflow problems") == []
-
-
-def test_retrieval_evaluation_reports_hits_and_mrr(tmp_path: Path) -> None:
-    retriever, _ = _indexed_playbook(tmp_path)
-    result = evaluate_retrieval(
-        retriever,
-        [{"text": "workflow problems", "relevant": ["Chapter 1 Discovery"]}],
-    )
-    assert result["n"] == 1
-    assert result["hit@1"] == 1
-    assert result["mrr"] == 1
-    assert evaluate_retrieval(retriever, []) == {"reason": "no queries provided", "n": 0}

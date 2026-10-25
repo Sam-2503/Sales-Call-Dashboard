@@ -1,8 +1,0 @@
-{
-  "schema_version": "1.0",
-  "status": "insufficient_data",
-  "reason": "Synthetic short fixture is below the minimum duration.",
-  "meta": {"pipeline_version": "0.1.0"},
-  "unverified_count": 0,
-  "warnings": []
-}

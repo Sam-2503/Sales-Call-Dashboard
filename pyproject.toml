@@ -8,14 +8,11 @@ version = "0.1.0"
 description = "Evidence-backed sales-call analysis pipeline."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["chromadb==1.5.0", "langchain==1.2.12", "langchain-chroma==1.1.0", "langchain-google-genai==4.2.1", "librosa==0.11.0", "numpy==2.4.3", "pydantic==2.12.5", "pydantic-settings==2.13.1", "pypdf==6.9.1", "pyyaml==6.0.3", "rapidfuzz==3.14.3", "soundfile==0.13.1", "typer==0.21.0"]
+dependencies = ["chromadb==1.5.0", "langchain==1.2.12", "langchain-chroma==1.1.0", "langchain-google-genai==4.2.1", "librosa==0.11.0", "numpy==2.4.3", "pydantic==2.12.5", "pydantic-settings==2.13.1", "pypdf==6.9.1", "pyyaml==6.0.3", "rapidfuzz==3.14.3", "soundfile==0.13.1"]
 
 [project.optional-dependencies]
 eval = ["scikit-learn==1.8.0"]
 dev = ["mypy==1.19.1", "pytest==9.0.2", "pytest-asyncio==1.3.0", "reportlab==4.4.10", "ruff==0.15.5"]
-
-[project.scripts]
-call-analyser = "cli:app"
 
 [tool.hatch.build.targets.wheel]
 only-include = ["src"]

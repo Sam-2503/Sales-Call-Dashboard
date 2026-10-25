@@ -15,14 +15,13 @@
 make install
 make fmt
 make check
-uv run call-analyser --help
 ```
 
 ## Layout
 - `src/`: flat importable analysis modules and focused subpackages.
-- `schemas/`: public Pydantic contracts.
-- `prompts/`: versioned prompt resources.
-- `playbook/`: extraction, indexing and retrieval.
+- `src/schemas/`: public Pydantic contracts.
+- `src/prompts/`: versioned prompt resources.
+- `src/playbook/`: extraction, indexing and retrieval.
 - `tests/`: synthetic network-free tests; live tests carry `@pytest.mark.live`.
 
 ## Conventions

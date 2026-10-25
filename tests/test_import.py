@@ -1,4 +1,4 @@
 def test_source_modules_import_without_side_effects() -> None:
-    import cli
+    import pipeline
 
-    assert cli.app.info.help == "Evidence-backed sales-call analysis."
+    assert pipeline.AnalyseInput.__name__ == "AnalyseInput"

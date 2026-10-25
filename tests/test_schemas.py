@@ -1,13 +1,9 @@
-import json
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
-from typer.testing import CliRunner
 
-from cli import app
 from schemas import CallReport, Evidence, PlaybookRef, RubricResult, Transcript
-from transcription.fake import FakeTranscriber
 
 
 def evidence() -> Evidence:
@@ -27,17 +23,6 @@ def test_transcript_round_trips_synthetic_fixture() -> None:
     source = Path("fixtures/synthetic_short_transcript.json")
     transcript = Transcript.model_validate_json(source.read_text())
     assert Transcript.model_validate_json(transcript.model_dump_json()) == transcript
-
-
-def test_full_synthetic_fixture_has_forty_turns() -> None:
-    transcript = FakeTranscriber().fixture
-    assert len(transcript.turns) == 40
-    assert transcript.duration_s == 240
-
-
-def test_hand_built_call_report_fixture_is_valid() -> None:
-    report = CallReport.model_validate_json(Path("fixtures/synthetic_call_report.json").read_text())
-    assert report.status == "insufficient_data"
 
 
 def test_required_evidence_and_times_are_validated() -> None:
@@ -85,13 +70,3 @@ def test_excerpt_and_coaching_references_are_validated() -> None:
                 },
             }
         )
-
-
-def test_schema_export_is_deterministic(tmp_path: Path) -> None:
-    runner = CliRunner()
-    first = tmp_path / "one.json"
-    second = tmp_path / "two.json"
-    assert runner.invoke(app, ["export-schema", "--output", str(first)]).exit_code == 0
-    assert runner.invoke(app, ["export-schema", "--output", str(second)]).exit_code == 0
-    assert first.read_bytes() == second.read_bytes()
-    assert json.loads(first.read_text())["title"] == "CallReport"

@@ -400,7 +400,6 @@ dependencies = [
     { name = "pyyaml" },
     { name = "rapidfuzz" },
     { name = "soundfile" },
-    { name = "typer" },
 ]
 
 [package.optional-dependencies]
@@ -435,7 +434,6 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = "==0.15.5" },
     { name = "scikit-learn", marker = "extra == 'eval'", specifier = "==1.8.0" },
     { name = "soundfile", specifier = "==0.13.1" },
-    { name = "typer", specifier = "==0.21.0" },
 ]
 provides-extras = ["eval", "dev"]
 

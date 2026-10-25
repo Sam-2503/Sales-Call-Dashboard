@@ -72,9 +72,7 @@ async def test_progress_events_arrive_in_order() -> None:
 
 
 async def test_usage_tracker_sums_fake_llm_usage(tmp_path: Path) -> None:
-    price = tmp_path / "pricing.yaml"
-    price.write_text("models: {}\n")
-    tracker = UsageTracker(str(price))
+    tracker = UsageTracker()
     await tracker.on_llm_start({}, ["prompt"], run_id="r", tags=["rubric_results"])
     message = SimpleNamespace(
         usage_metadata={"input_tokens": 3, "output_tokens": 4, "total_tokens": 7}

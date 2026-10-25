@@ -1,7 +1,0 @@
-# Synthetic retrieval evaluation queries for the fixture playbook.
-- text: discovery questions and workflow problems
-  relevant:
-    - Chapter 1 Discovery
-- text: closing commitments and next meeting
-  relevant:
-    - Chapter 2 Closing

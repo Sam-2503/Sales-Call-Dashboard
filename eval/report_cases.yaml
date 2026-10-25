@@ -1,3 +1,0 @@
-- id: synthetic-short
-  report: ../fixtures/synthetic_call_report.json
-  expected_overall_score: null

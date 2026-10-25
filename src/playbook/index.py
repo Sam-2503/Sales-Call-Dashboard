@@ -183,15 +183,14 @@ def open_playbook(spec: PlaybookSpec, settings: Settings | None = None) -> ReadO
     manifest = _read_manifest(path)
     if manifest is None or manifest.get("status") != "complete":
         raise PlaybookNotIndexedError(
-            f"playbook is not indexed; run `call-analyser playbook index {spec.slug}`"
+            f"playbook index is missing; index playbook '{spec.slug}' before analysis"
         )
     if (
         manifest.get("embedding_model") != settings.embedding_model
         or manifest.get("embedding_dim") != settings.embedding_dim
     ):
         raise PlaybookIndexMismatchError(
-            f"playbook index does not match settings; run `call-analyser playbook index "
-            f"{spec.slug} --rebuild --yes`"
+            f"playbook index does not match settings; rebuild index '{spec.slug}'"
         )
     return ReadOnlyPlaybookIndex(_store(spec, settings, _embedding(settings)), manifest)
 

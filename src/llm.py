@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from collections import defaultdict
 from time import monotonic
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
-import yaml
 from langchain.chat_models import init_chat_model
 from langchain_core.callbacks import AsyncCallbackHandler
 from langchain_core.messages import AIMessage
@@ -61,16 +60,9 @@ async def ainvoke_structured(
 class UsageTracker(AsyncCallbackHandler):
     """Accumulate per-stage latency and provider-reported token usage."""
 
-    def __init__(self, pricing_path: str = "config/pricing.yaml") -> None:
+    def __init__(self) -> None:
         self.started: dict[Any, tuple[str, float]] = {}
         self.usage: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
-        self.prices = self._load_prices(pricing_path)
-
-    @staticmethod
-    def _load_prices(path: str) -> dict[str, dict[str, float]]:
-        with open(path, encoding="utf-8") as handle:
-            raw = yaml.safe_load(handle) or {}
-        return cast(dict[str, dict[str, float]], raw.get("models", {}))
 
     async def on_llm_start(
         self, serialized: dict[str, Any], prompts: list[str], *, run_id: Any, **kwargs: Any
@@ -91,9 +83,3 @@ class UsageTracker(AsyncCallbackHandler):
         ):
             call_usage[target] = float((metadata or {}).get(source, 0))
             bucket[target] += call_usage[target]
-        model = str(getattr(message, "response_metadata", {}).get("model_name", ""))
-        prices = self.prices.get(model, {})
-        bucket["cost"] += (
-            call_usage["input_tokens"] * float(prices.get("input_per_million", 0))
-            + call_usage["output_tokens"] * float(prices.get("output_per_million", 0))
-        ) / 1_000_000
