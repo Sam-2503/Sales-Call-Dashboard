@@ -69,3 +69,13 @@ Their outputs contain only model-supplied turn IDs and quotes; timestamps and
 public evidence objects are intentionally created by the deterministic
 verification stage that follows. Transcript content is delimited as untrusted
 data, and model references to unknown turn or rubric IDs are rejected.
+
+## Evidence verification
+
+Stage 8 treats every model quote as untrusted. The verifier normalizes and
+fuzzy-matches it against the cited turn, searches configured neighboring turns
+when necessary, checks the claimed speaker role, and replaces the model quote
+and timestamps with exact transcript-derived values. Failed matches may be
+repaired at most twice; unsupported findings are dropped and counted rather
+than shown. Confidence buckets are deterministic and depend on repair attempt,
+match score, and model confidence.
