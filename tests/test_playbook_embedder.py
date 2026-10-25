@@ -68,6 +68,11 @@ def test_fake_embeddings_cache_zero_disables_reuse() -> None:
     assert embeddings.query_count == 2
 
 
+def test_fake_embeddings_reject_negative_cache_size() -> None:
+    with pytest.raises(ValueError, match="non-negative"):
+        FakeEmbeddings(dimension=8, cache_size=-1)
+
+
 def test_fake_embeddings_cache_uses_recently_used_order() -> None:
     embeddings = FakeEmbeddings(dimension=8, cache_size=2)
 
