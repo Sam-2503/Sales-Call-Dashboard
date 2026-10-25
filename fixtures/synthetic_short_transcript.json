@@ -1,0 +1,17 @@
+{
+  "label": "Synthetic fixture — not a real sales call.",
+  "duration_s": 36.0,
+  "language": "en",
+  "source_model": "fixture",
+  "timing": "word",
+  "speakers": ["Rep", "Prospect"],
+  "speaker_roles": {"Rep": "agent", "Prospect": "customer"},
+  "turns": [
+    {"id": "T001", "speaker": "Rep", "role": "agent", "start_s": 0, "end_s": 5, "text": "Hi, this is a quick call about our platform.", "words": [{"text": "Hi", "speaker": "Rep", "start_s": 0, "end_s": 1}]},
+    {"id": "T002", "speaker": "Prospect", "role": "customer", "start_s": 5, "end_s": 10, "text": "I only have a minute.", "words": [{"text": "I", "speaker": "Prospect", "start_s": 5, "end_s": 6}]},
+    {"id": "T003", "speaker": "Rep", "role": "agent", "start_s": 10, "end_s": 15, "text": "Our product saves teams time.", "words": [{"text": "Our", "speaker": "Rep", "start_s": 10, "end_s": 11}]},
+    {"id": "T004", "speaker": "Prospect", "role": "customer", "start_s": 15, "end_s": 20, "text": "How much does it cost?", "words": [{"text": "How", "speaker": "Prospect", "start_s": 15, "end_s": 16}]},
+    {"id": "T005", "speaker": "Rep", "role": "agent", "start_s": 20, "end_s": 28, "text": "It depends, but can we schedule a demo?", "words": [{"text": "It", "speaker": "Rep", "start_s": 20, "end_s": 21}]},
+    {"id": "T006", "speaker": "Prospect", "role": "customer", "start_s": 28, "end_s": 36, "text": "Please send details first.", "words": [{"text": "Please", "speaker": "Prospect", "start_s": 28, "end_s": 29}]}
+  ]
+}
