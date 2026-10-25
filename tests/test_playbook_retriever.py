@@ -3,10 +3,10 @@ from pathlib import Path
 import yaml
 from reportlab.pdfgen.canvas import Canvas
 
-from call_analyser.config import Settings
-from call_analyser.playbook import index_playbook, load_playbook_spec, open_playbook
-from call_analyser.playbook.eval import evaluate_retrieval
-from call_analyser.playbook.retriever import PlaybookRetriever
+from config import Settings
+from playbook import index_playbook, load_playbook_spec, open_playbook
+from playbook.eval import evaluate_retrieval
+from playbook.retriever import PlaybookRetriever
 
 
 def _indexed_playbook(tmp_path: Path) -> tuple[PlaybookRetriever, Settings]:

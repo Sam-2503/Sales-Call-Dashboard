@@ -2,6 +2,20 @@
 
 Evidence-backed GenAI analysis of sales calls against a rubric and indexed playbook.
 
+## Application architecture
+
+The analysis core lives directly under `src/` so a FastAPI backend can import
+the service boundary without an extra package layer:
+
+```python
+from pipeline import AnalyseInput, analyse_call
+```
+
+Uploaded recordings should be written to managed temporary storage by the API,
+then passed to `analyse_call`. The returned `CallReport` is already a
+schema-valid object suitable for a dashboard response or persistence layer.
+The React frontend is intentionally outside this repository's analysis core.
+
 ## Development
 
 Requires Python 3.11+, [uv](https://docs.astral.sh/uv/), and `ffmpeg`/`ffprobe`.

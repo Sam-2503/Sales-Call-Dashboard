@@ -1,6 +1,6 @@
 from _pytest.monkeypatch import MonkeyPatch
 
-from call_analyser.config import Settings
+from config import Settings
 
 
 def test_settings_read_environment(monkeypatch: MonkeyPatch) -> None:

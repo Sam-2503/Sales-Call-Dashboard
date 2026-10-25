@@ -4,10 +4,10 @@ from typing import Any
 import pytest
 from pydantic import BaseModel
 
-from call_analyser.rubric import load_rubric
-from call_analyser.schemas import Transcript
-from call_analyser.stages import AnalysisInput, customer_signals, missed_moments, rubric_results
-from call_analyser.stages.analysis import (
+from rubric import load_rubric
+from schemas import Transcript
+from stages import AnalysisInput, customer_signals, missed_moments, rubric_results
+from stages.analysis import (
     CustomerSignalsDraft,
     DraftRubricResult,
     MissedMomentsDraft,

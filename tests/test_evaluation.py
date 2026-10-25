@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from call_analyser.evaluation import evaluate_cases, load_cases
+from evaluation import evaluate_cases, load_cases
 
 
 def test_evaluation_handles_empty_cases() -> None:

@@ -3,9 +3,9 @@ from pathlib import Path
 import yaml
 from reportlab.pdfgen.canvas import Canvas
 
-from call_analyser.config import Settings
-from call_analyser.playbook import index_playbook, load_playbook_spec, open_playbook
-from call_analyser.playbook.embedder import FakeEmbeddings
+from config import Settings
+from playbook import index_playbook, load_playbook_spec, open_playbook
+from playbook.embedder import FakeEmbeddings
 
 
 def _fixture(tmp_path: Path) -> tuple[Path, Settings]:
@@ -48,7 +48,7 @@ def test_index_is_idempotent_and_read_only_open_does_not_embed_documents(
 
 
 def test_open_missing_index_fails_with_remediation(tmp_path: Path) -> None:
-    from call_analyser.errors import PlaybookNotIndexedError
+    from errors import PlaybookNotIndexedError
 
     spec_path, settings = _fixture(tmp_path)
     spec = load_playbook_spec(spec_path)

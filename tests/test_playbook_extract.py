@@ -4,9 +4,9 @@ import pytest
 import yaml
 from reportlab.pdfgen.canvas import Canvas
 
-from call_analyser.config import Settings
-from call_analyser.errors import PlaybookExtractionError
-from call_analyser.playbook import chunk_playbook, extract_playbook, load_playbook_spec
+from config import Settings
+from errors import PlaybookExtractionError
+from playbook import chunk_playbook, extract_playbook, load_playbook_spec
 
 
 def _make_pdf(path: Path, pages: list[str]) -> None:

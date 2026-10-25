@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from call_analyser.errors import RubricError
-from call_analyser.rubric import load_rubric, render_rubric
+from errors import RubricError
+from rubric import load_rubric, render_rubric
 
 RUBRIC_PATH = Path("rubrics/sales_v1.yaml")
 

@@ -19,7 +19,7 @@ uv run call-analyser --help
 ```
 
 ## Layout
-- `src/call_analyser/`: importable package.
+- `src/`: flat importable analysis modules and focused subpackages.
 - `schemas/`: public Pydantic contracts.
 - `prompts/`: versioned prompt resources.
 - `playbook/`: extraction, indexing and retrieval.

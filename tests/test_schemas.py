@@ -5,8 +5,9 @@ import pytest
 from pydantic import ValidationError
 from typer.testing import CliRunner
 
-from call_analyser.cli import app
-from call_analyser.schemas import CallReport, Evidence, PlaybookRef, RubricResult, Transcript
+from cli import app
+from schemas import CallReport, Evidence, PlaybookRef, RubricResult, Transcript
+from transcription.fake import FakeTranscriber
 
 
 def evidence() -> Evidence:
@@ -29,9 +30,7 @@ def test_transcript_round_trips_synthetic_fixture() -> None:
 
 
 def test_full_synthetic_fixture_has_forty_turns() -> None:
-    from fixtures.synthetic_saas_transcript import build_transcript
-
-    transcript = Transcript.model_validate(build_transcript())
+    transcript = FakeTranscriber().fixture
     assert len(transcript.turns) == 40
     assert transcript.duration_s == 240
 

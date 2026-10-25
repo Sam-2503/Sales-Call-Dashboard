@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from call_analyser.config import Settings
-from call_analyser.schemas import Transcript
-from call_analyser.stages.analysis import DraftEvidence, DraftRubricResult
-from call_analyser.verification import confidence_bucket, verify_and_repair, verify_finding
+from config import Settings
+from schemas import Transcript
+from stages.analysis import DraftEvidence, DraftRubricResult
+from verification import confidence_bucket, verify_and_repair, verify_finding
 
 
 def _transcript() -> Transcript:

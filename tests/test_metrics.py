@@ -3,11 +3,11 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-from call_analyser.metrics.dead_air import find_dead_air
-from call_analyser.metrics.fillers import count_fillers
-from call_analyser.metrics.response import response_summary
-from call_analyser.metrics.talk import longest_monologue, talk_time
-from call_analyser.schemas.transcript import Transcript, Turn, Word
+from metrics.dead_air import find_dead_air
+from metrics.fillers import count_fillers
+from metrics.response import response_summary
+from metrics.talk import longest_monologue, talk_time
+from schemas.transcript import Transcript, Turn, Word
 
 
 def _turn(

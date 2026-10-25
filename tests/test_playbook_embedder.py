@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from call_analyser.playbook.embedder import FakeEmbeddings
+from playbook.embedder import FakeEmbeddings
 
 
 def _norm(vector: list[float]) -> float:

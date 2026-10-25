@@ -1,11 +1,11 @@
 import pytest
 from langchain_core.documents import Document
 
-from call_analyser.config import Settings
-from call_analyser.rubric import load_rubric
-from call_analyser.schemas import Evidence, MissedMoment, RubricResult
-from call_analyser.scoring import score_rubric, select_missed_moments
-from call_analyser.stages.grounding import GroundingResponse, ground_finding
+from config import Settings
+from rubric import load_rubric
+from schemas import Evidence, MissedMoment, RubricResult
+from scoring import score_rubric, select_missed_moments
+from stages.grounding import GroundingResponse, ground_finding
 
 
 class FakeGroundingModel:

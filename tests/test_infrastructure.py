@@ -6,10 +6,10 @@ import pytest
 from langchain_core.runnables import RunnableConfig, chain
 from pydantic import BaseModel
 
-from call_analyser.events import ProgressCallbackHandler
-from call_analyser.llm import UsageTracker
-from call_analyser.persist import InMemoryStageStore, persisted
-from call_analyser.prompts.registry import PromptError, PromptRegistry
+from events import ProgressCallbackHandler
+from llm import UsageTracker
+from persist import InMemoryStageStore, persisted
+from prompts.registry import PromptError, PromptRegistry
 
 
 def test_prompt_rendering_is_strict(tmp_path: Path) -> None:

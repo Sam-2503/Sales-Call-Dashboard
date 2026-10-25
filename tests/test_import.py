@@ -1,4 +1,4 @@
-def test_package_imports_without_side_effects() -> None:
-    import call_analyser
+def test_source_modules_import_without_side_effects() -> None:
+    import cli
 
-    assert call_analyser.__version__ == "0.1.0"
+    assert cli.app.info.help == "Evidence-backed sales-call analysis."

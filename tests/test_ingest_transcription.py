@@ -4,12 +4,12 @@ import numpy as np
 import pytest
 import soundfile as sf
 
-from call_analyser.config import Settings
-from call_analyser.errors import AudioValidationError, TranscriptionError
-from call_analyser.ingest import AudioAsset, ingest
-from call_analyser.schemas import Transcript
-from call_analyser.transcription.gemini import RawSegment, RawTranscript, parse_response
-from call_analyser.transcription.roles import RoleAssignment, apply_roles
+from config import Settings
+from errors import AudioValidationError, TranscriptionError
+from ingest import AudioAsset, ingest
+from schemas import Transcript
+from transcription.gemini import RawSegment, RawTranscript, parse_response
+from transcription.roles import RoleAssignment, apply_roles
 
 
 def wav(path: Path, seconds: float) -> None:
