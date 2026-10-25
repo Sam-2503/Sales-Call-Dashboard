@@ -60,3 +60,12 @@ uv run call-analyser playbook eval-retrieval playbooks/<slug>/playbook.yaml \
 Retrieval strips the stored embedding header, returns passage IDs and citation
 metadata, and applies `PLAYBOOK_TOP_K`/`PLAYBOOK_MIN_SCORE` defaults. The
 analysis path only embeds the query; it never adds or re-embeds documents.
+
+## Stage 7 analysis stages
+
+The Stage 7 chains `rubric_results`, `missed_moments`, and `customer_signals`
+send the full rubric and timestamped transcript to structured-output models.
+Their outputs contain only model-supplied turn IDs and quotes; timestamps and
+public evidence objects are intentionally created by the deterministic
+verification stage that follows. Transcript content is delimited as untrusted
+data, and model references to unknown turn or rubric IDs are rejected.
