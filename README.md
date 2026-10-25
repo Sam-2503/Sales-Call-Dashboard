@@ -48,3 +48,15 @@ The index writes a manifest beside the configured Chroma directory, resumes
 interrupted batches by deterministic chunk ID, and refuses changed source PDFs
 or settings unless `--rebuild --yes` is supplied. Set `FAKE_MODE=true` for
 network-free local indexing tests.
+
+Stage 6c provides score-preserving retrieval and offline evaluation:
+
+```bash
+uv run call-analyser playbook query playbooks/<slug>/playbook.yaml "discovery questions"
+uv run call-analyser playbook eval-retrieval playbooks/<slug>/playbook.yaml \
+  --queries eval/retrieval_queries.yaml
+```
+
+Retrieval strips the stored embedding header, returns passage IDs and citation
+metadata, and applies `PLAYBOOK_TOP_K`/`PLAYBOOK_MIN_SCORE` defaults. The
+analysis path only embeds the query; it never adds or re-embeds documents.

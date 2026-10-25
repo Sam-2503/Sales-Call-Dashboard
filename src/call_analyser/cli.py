@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 import typer
 
@@ -14,7 +14,10 @@ from call_analyser.playbook import (
     extract_playbook,
     index_playbook,
     load_playbook_spec,
+    open_playbook,
 )
+from call_analyser.playbook.eval import evaluate_retrieval, load_queries
+from call_analyser.playbook.retriever import PlaybookRetriever
 from call_analyser.schemas import CallReport
 
 app = typer.Typer(help="Evidence-backed sales-call analysis.")
@@ -126,3 +129,33 @@ def playbook_status(spec_path: Path) -> None:
     if manifest.get("status") == "complete":
         live_count = open_playbook(spec).count()
     typer.echo(json.dumps({"manifest": manifest, "live_collection_count": live_count}, indent=2))
+
+
+@playbook_app.command("query")
+def query_playbook(
+    spec_path: Path,
+    query: str,
+    k: int = typer.Option(5, min=1),
+    full: bool = typer.Option(False, "--full"),
+) -> None:
+    """Query an indexed playbook and print scored citations."""
+    spec = load_playbook_spec(spec_path)
+    retriever = PlaybookRetriever(index=open_playbook(spec), top_k=k)
+    for document in retriever.invoke(query):
+        excerpt = document.page_content if full else " ".join(document.page_content.split())[:200]
+        typer.echo(
+            f"[{document.metadata['score']:.3f}] {document.metadata.get('chapter')} "
+            f"pp. {document.metadata.get('page_start')}-{document.metadata.get('page_end')} "
+            f"{document.metadata.get('passage_id')}\n{excerpt}\n"
+        )
+
+
+@playbook_app.command("eval-retrieval")
+def eval_retrieval(
+    spec_path: Path,
+    queries: Annotated[Path, typer.Option(..., "--queries")],
+) -> None:
+    """Evaluate retrieval against chapter/page references in a YAML file."""
+    spec = load_playbook_spec(spec_path)
+    retriever = PlaybookRetriever(index=open_playbook(spec))
+    typer.echo(json.dumps(evaluate_retrieval(retriever, load_queries(queries)), indent=2))

@@ -136,6 +136,7 @@ def index_playbook(
                     page_content=chunk.embedding_text,
                     metadata={
                         "book_slug": chunk.book_slug,
+                        "passage_id": chunk.id,
                         "chapter": chunk.chapter,
                         "page_start": chunk.page_start,
                         "page_end": chunk.page_end,
