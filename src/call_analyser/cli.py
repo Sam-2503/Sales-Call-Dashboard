@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 from typing import Annotated, Any
@@ -9,6 +10,7 @@ from typing import Annotated, Any
 import typer
 
 from call_analyser.config import Settings
+from call_analyser.pipeline import AnalyseInput, analyse_call
 from call_analyser.playbook import (
     chunk_playbook,
     extract_playbook,
@@ -42,6 +44,36 @@ def export_schema(output: Path = Path("schemas/call_report.schema.json")) -> Non
     """Write a deterministic JSON Schema for the public report contract."""
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(CallReport.model_json_schema(), indent=2, sort_keys=True) + "\n")
+
+
+@app.command("analyse")
+def analyse_command(
+    audio_path: Path,
+    rubric_path: Annotated[Path, typer.Option("--rubric")] = Path("rubrics/sales_v1.yaml"),
+    playbook_path: Annotated[Path | None, typer.Option("--playbook")] = None,
+    fake: Annotated[
+        bool, typer.Option("--fake", help="Use the offline synthetic transcriber.")
+    ] = False,
+    no_grounding: Annotated[bool, typer.Option("--no-grounding")] = False,
+    output: Annotated[Path | None, typer.Option("--output", "-o")] = None,
+) -> None:
+    """Analyse one call and print or save its schema-valid JSON report."""
+    report = asyncio.run(
+        analyse_call.ainvoke(
+            AnalyseInput(
+                audio_path=audio_path,
+                rubric_path=rubric_path,
+                playbook_path=playbook_path,
+                grounding=not no_grounding,
+                fake=fake,
+            )
+        )
+    )
+    rendered = report.model_dump_json(indent=2)
+    if output is None:
+        typer.echo(rendered)
+    else:
+        output.write_text(rendered + "\n")
 
 
 @playbook_app.command("inspect")
