@@ -13,3 +13,13 @@ make check
 ```
 
 Stage 0 provides scaffolding, configuration and developer tooling. Imports have no side effects.
+
+## Deterministic metrics
+
+Stage 4 metrics operate on transcript timings and are therefore approximate when
+`timing_resolution` is `segment_interpolated`; callers should not display
+sub-second precision. They include talk-to-listen shares, words per minute,
+configured filler counts, longest monologue, indicative customer-to-agent response
+delays, and optional energy-based dead-air flags from a normalized audio file.
+Interruptions are intentionally unavailable in v1 because sequential transcript
+segments cannot establish overlapping speech honestly.
