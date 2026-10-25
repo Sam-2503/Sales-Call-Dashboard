@@ -35,3 +35,15 @@ async def test_fake_embeddings_async_methods_match_sync_methods() -> None:
     assert documents[0] == embeddings.embed_documents(["same text"])[0]
     assert documents[1] == [0.0] * 16
     assert query == [0.0] * 16
+
+
+def test_fake_embeddings_use_bounded_query_cache() -> None:
+    embeddings = FakeEmbeddings(dimension=8, cache_size=1)
+
+    first = embeddings.embed_query("first")
+    cached = embeddings.embed_query("first")
+    embeddings.embed_query("second")
+    evicted = embeddings.embed_query("first")
+
+    assert first == cached == evicted
+    assert embeddings.query_count == 3

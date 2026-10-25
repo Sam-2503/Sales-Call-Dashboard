@@ -6,6 +6,8 @@ import asyncio
 import hashlib
 import math
 import re
+from collections import OrderedDict
+from threading import Lock
 
 from langchain_core.embeddings import Embeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -22,12 +24,17 @@ def _normalise(vector: list[float]) -> list[float]:
 class FakeEmbeddings(Embeddings):
     """Deterministic hashed bag-of-words embeddings for offline tests."""
 
-    def __init__(self, dimension: int = 768) -> None:
+    def __init__(self, dimension: int = 768, cache_size: int = 0) -> None:
         if dimension < 1:
             raise ValueError("embedding dimension must be positive")
+        if cache_size < 0:
+            raise ValueError("embedding cache size must be non-negative")
         self.dimension = dimension
+        self.cache_size = cache_size
         self.document_count = 0
         self.query_count = 0
+        self._query_cache: OrderedDict[str, list[float]] = OrderedDict()
+        self._cache_lock = Lock()
 
     def _embed(self, text: str) -> list[float]:
         vector = [0.0] * self.dimension
@@ -41,8 +48,20 @@ class FakeEmbeddings(Embeddings):
         return [self._embed(text) for text in texts]
 
     def embed_query(self, text: str) -> list[float]:
+        with self._cache_lock:
+            cached = self._query_cache.get(text)
+            if cached is not None:
+                self._query_cache.move_to_end(text)
+                return cached.copy()
         self.query_count += 1
-        return self._embed(text)
+        vector = self._embed(text)
+        if self.cache_size:
+            with self._cache_lock:
+                self._query_cache[text] = vector.copy()
+                self._query_cache.move_to_end(text)
+                while len(self._query_cache) > self.cache_size:
+                    self._query_cache.popitem(last=False)
+        return vector
 
     async def aembed_documents(self, texts: list[str]) -> list[list[float]]:
         return await asyncio.to_thread(self.embed_documents, texts)
@@ -71,14 +90,28 @@ class GeminiEmbeddings(Embeddings):
             output_dimensionality=self.settings.embedding_dim,
             api_key=api_key,
         )
+        self._query_cache: OrderedDict[str, list[float]] = OrderedDict()
+        self._cache_lock = Lock()
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         self.document_count += len(texts)
         return [_normalise(vector) for vector in self._document_model.embed_documents(texts)]
 
     def embed_query(self, text: str) -> list[float]:
+        with self._cache_lock:
+            cached = self._query_cache.get(text)
+            if cached is not None:
+                self._query_cache.move_to_end(text)
+                return cached.copy()
         self.query_count += 1
-        return _normalise(self._query_model.embed_query(text))
+        vector = _normalise(self._query_model.embed_query(text))
+        if self.settings.query_embed_cache_size:
+            with self._cache_lock:
+                self._query_cache[text] = vector.copy()
+                self._query_cache.move_to_end(text)
+                while len(self._query_cache) > self.settings.query_embed_cache_size:
+                    self._query_cache.popitem(last=False)
+        return vector
 
     async def aembed_documents(self, texts: list[str]) -> list[list[float]]:
         return await asyncio.to_thread(self.embed_documents, texts)

@@ -48,7 +48,7 @@ def _write_manifest(path: Path, payload: dict[str, Any]) -> None:
 
 def _embedding(settings: Settings) -> FakeEmbeddings | GeminiEmbeddings:
     return (
-        FakeEmbeddings(settings.embedding_dim)
+        FakeEmbeddings(settings.embedding_dim, settings.query_embed_cache_size)
         if settings.fake_mode
         else GeminiEmbeddings(settings)
     )
