@@ -57,3 +57,24 @@ def test_fake_embeddings_return_defensive_cache_copies() -> None:
 
     assert embeddings.embed_query("same") != first
     assert embeddings.query_count == 1
+
+
+def test_fake_embeddings_cache_zero_disables_reuse() -> None:
+    embeddings = FakeEmbeddings(dimension=8, cache_size=0)
+
+    embeddings.embed_query("same")
+    embeddings.embed_query("same")
+
+    assert embeddings.query_count == 2
+
+
+def test_fake_embeddings_cache_uses_recently_used_order() -> None:
+    embeddings = FakeEmbeddings(dimension=8, cache_size=2)
+
+    embeddings.embed_query("first")
+    embeddings.embed_query("second")
+    embeddings.embed_query("first")
+    embeddings.embed_query("third")
+    embeddings.embed_query("second")
+
+    assert embeddings.query_count == 4
