@@ -1,4 +1,4 @@
-.PHONY: install fmt lint typecheck test check dev
+.PHONY: install fmt lint typecheck test check dev migrate
 
 install:
 	uv sync --extra dev
@@ -13,3 +13,5 @@ test:
 check: lint typecheck test
 dev:
 	uv run uvicorn analyser_api.app:app --reload
+migrate:
+	uv run analyser-api migrate

@@ -15,6 +15,11 @@ class Settings(BaseSettings):
 
     environment: Literal["dev", "test", "prod"] = "dev"
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/analyser"
+    database_url_direct: str | None = None
+    db_pooler: bool = False
+    db_pool_size: int = Field(default=5, ge=1)
+    db_max_overflow: int = Field(default=5, ge=0)
+    db_connect_retries: int = Field(default=3, ge=0)
     jwt_secret: str | None = Field(default=None, repr=False)
     cors_origins: list[str] = Field(default_factory=list)
     max_upload_mb: int = Field(default=100, ge=1)

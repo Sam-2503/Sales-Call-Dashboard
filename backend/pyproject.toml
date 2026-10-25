@@ -9,10 +9,12 @@ description = "FastAPI service for the call analyser."
 requires-python = ">=3.11"
 dependencies = [
   "alembic>=1.15,<2",
+  "asyncpg>=0.30,<1",
   "call-analyser",
   "fastapi>=0.115,<1",
   "pydantic>=2.12,<3",
   "pydantic-settings>=2.7,<3",
+  "sqlalchemy[asyncio]>=2.0.36,<3",
   "uvicorn[standard]>=0.34,<1",
 ]
 
@@ -24,6 +26,9 @@ dev = [
   "pytest-asyncio>=0.24,<1",
   "ruff>=0.9,<1",
 ]
+
+[project.scripts]
+analyser-api = "analyser_api.cli:main"
 
 [tool.uv.sources]
 call-analyser = { path = "..", editable = true }
