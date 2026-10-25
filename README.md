@@ -47,7 +47,9 @@ uv run call-analyser playbook status playbooks/<slug>/playbook.yaml
 The index writes a manifest beside the configured Chroma directory, resumes
 interrupted batches by deterministic chunk ID, and refuses changed source PDFs
 or settings unless `--rebuild --yes` is supplied. Set `FAKE_MODE=true` for
-network-free local indexing tests.
+network-free local indexing tests. Set `QUERY_EMBED_CACHE_SIZE=0` to disable
+the bounded LRU cache for repeated retrieval queries; document embeddings are
+never cached.
 
 Stage 6c provides score-preserving retrieval and offline evaluation:
 
