@@ -21,6 +21,32 @@ def _normalise(vector: list[float]) -> list[float]:
     return [value / norm for value in vector] if norm else vector
 
 
+class _QueryEmbeddingCache:
+    def __init__(self, max_size: int) -> None:
+        self.max_size = max_size
+        self._values: OrderedDict[str, list[float]] = OrderedDict()
+        self._lock = Lock()
+
+    def get(self, query: str) -> list[float] | None:
+        if not self.max_size:
+            return None
+        with self._lock:
+            value = self._values.get(query)
+            if value is None:
+                return None
+            self._values.move_to_end(query)
+            return value.copy()
+
+    def put(self, query: str, vector: list[float]) -> None:
+        if not self.max_size:
+            return
+        with self._lock:
+            self._values[query] = vector.copy()
+            self._values.move_to_end(query)
+            while len(self._values) > self.max_size:
+                self._values.popitem(last=False)
+
+
 class FakeEmbeddings(Embeddings):
     """Deterministic hashed bag-of-words embeddings for offline tests."""
 
@@ -33,8 +59,7 @@ class FakeEmbeddings(Embeddings):
         self.cache_size = cache_size
         self.document_count = 0
         self.query_count = 0
-        self._query_cache: OrderedDict[str, list[float]] = OrderedDict()
-        self._cache_lock = Lock()
+        self._query_cache = _QueryEmbeddingCache(cache_size)
 
     def _embed(self, text: str) -> list[float]:
         vector = [0.0] * self.dimension
@@ -48,19 +73,12 @@ class FakeEmbeddings(Embeddings):
         return [self._embed(text) for text in texts]
 
     def embed_query(self, text: str) -> list[float]:
-        with self._cache_lock:
-            cached = self._query_cache.get(text)
-            if cached is not None:
-                self._query_cache.move_to_end(text)
-                return cached.copy()
+        cached = self._query_cache.get(text)
+        if cached is not None:
+            return cached
         self.query_count += 1
         vector = self._embed(text)
-        if self.cache_size:
-            with self._cache_lock:
-                self._query_cache[text] = vector.copy()
-                self._query_cache.move_to_end(text)
-                while len(self._query_cache) > self.cache_size:
-                    self._query_cache.popitem(last=False)
+        self._query_cache.put(text, vector)
         return vector
 
     async def aembed_documents(self, texts: list[str]) -> list[list[float]]:
@@ -90,27 +108,19 @@ class GeminiEmbeddings(Embeddings):
             output_dimensionality=self.settings.embedding_dim,
             api_key=api_key,
         )
-        self._query_cache: OrderedDict[str, list[float]] = OrderedDict()
-        self._cache_lock = Lock()
+        self._query_cache = _QueryEmbeddingCache(self.settings.query_embed_cache_size)
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         self.document_count += len(texts)
         return [_normalise(vector) for vector in self._document_model.embed_documents(texts)]
 
     def embed_query(self, text: str) -> list[float]:
-        with self._cache_lock:
-            cached = self._query_cache.get(text)
-            if cached is not None:
-                self._query_cache.move_to_end(text)
-                return cached.copy()
+        cached = self._query_cache.get(text)
+        if cached is not None:
+            return cached
         self.query_count += 1
         vector = _normalise(self._query_model.embed_query(text))
-        if self.settings.query_embed_cache_size:
-            with self._cache_lock:
-                self._query_cache[text] = vector.copy()
-                self._query_cache.move_to_end(text)
-                while len(self._query_cache) > self.settings.query_embed_cache_size:
-                    self._query_cache.popitem(last=False)
+        self._query_cache.put(text, vector)
         return vector
 
     async def aembed_documents(self, texts: list[str]) -> list[list[float]]:

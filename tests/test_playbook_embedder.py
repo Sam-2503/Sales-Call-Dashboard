@@ -47,3 +47,13 @@ def test_fake_embeddings_use_bounded_query_cache() -> None:
 
     assert first == cached == evicted
     assert embeddings.query_count == 3
+
+
+def test_fake_embeddings_return_defensive_cache_copies() -> None:
+    embeddings = FakeEmbeddings(dimension=8, cache_size=1)
+
+    first = embeddings.embed_query("same")
+    first[0] = 99
+
+    assert embeddings.embed_query("same") != first
+    assert embeddings.query_count == 1
