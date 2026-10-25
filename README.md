@@ -89,3 +89,17 @@ actual retrieved passage IDs. Invalid citations are discarded, excerpts are
 capped, and grounding can be disabled with `PLAYBOOK_GROUNDING=off` without
 performing retrieval. Rubric scoring excludes `not_applicable` items and
 reports critical missed items separately.
+
+## Stage 11 offline evaluation
+
+Saved reports can be evaluated without model or network calls. Define cases as
+a YAML list with a report path and optional expected rubric statuses, missed
+rubric item IDs, and overall score:
+
+```bash
+uv run call-analyser evaluate --cases eval/report_cases.yaml
+```
+
+The harness reports rubric status accuracy, missed-moment recall, evidence
+validity, and mean absolute score error. Evaluation inputs and report fixtures
+are intentionally kept separate from production analysis.

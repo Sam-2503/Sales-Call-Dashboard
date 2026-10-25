@@ -10,6 +10,7 @@ from typing import Annotated, Any
 import typer
 
 from call_analyser.config import Settings
+from call_analyser.evaluation import evaluate_cases, load_cases
 from call_analyser.pipeline import AnalyseInput, analyse_call
 from call_analyser.playbook import (
     chunk_playbook,
@@ -44,6 +45,15 @@ def export_schema(output: Path = Path("schemas/call_report.schema.json")) -> Non
     """Write a deterministic JSON Schema for the public report contract."""
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(CallReport.model_json_schema(), indent=2, sort_keys=True) + "\n")
+
+
+@app.command("evaluate")
+def evaluate_command(
+    cases: Annotated[Path, typer.Option("--cases")],
+) -> None:
+    """Evaluate saved reports against an offline YAML case set."""
+    summary = evaluate_cases(load_cases(cases), cases.parent)
+    typer.echo(summary.model_dump_json(indent=2))
 
 
 @app.command("analyse")
