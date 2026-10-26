@@ -16,7 +16,8 @@ from analyser_api.db.engine import create_engine
 from analyser_api.deps import WorkspaceAuthError, workspace_auth_handler
 from analyser_api.errors import unhandled_error_handler, validation_error_handler
 from analyser_api.logging import RequestLogMiddleware
-from analyser_api.routers import agents, workspaces
+from analyser_api.routers import agents, calls, workspaces
+from analyser_api.storage.factory import create_storage
 
 
 @asynccontextmanager
@@ -32,6 +33,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = active
     app.state.engine = create_engine(active)
     app.state.session_factory = async_sessionmaker(app.state.engine, expire_on_commit=False)
+    app.state.storage = create_storage(active)
     app.add_middleware(RequestLogMiddleware)
     app.add_middleware(GZipMiddleware, minimum_size=1000)
     if active.cors_origins:
@@ -48,6 +50,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(workspaces.router)
     app.include_router(agents.router)
+    app.include_router(calls.router)
     from fastapi.exceptions import RequestValidationError
 
     app.add_exception_handler(RequestValidationError, validation_error_handler)

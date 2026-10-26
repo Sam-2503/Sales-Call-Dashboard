@@ -27,9 +27,7 @@ async def list_agents(workspace_id: Workspace, db: Database) -> list[AgentRespon
 
 
 @router.post("", response_model=AgentResponse, status_code=201)
-async def create_agent(
-    workspace_id: Workspace, body: AgentCreate, db: Database
-) -> AgentResponse:
+async def create_agent(workspace_id: Workspace, body: AgentCreate, db: Database) -> AgentResponse:
     agent = Agent(workspace_id=workspace_id, name=body.name)
     db.add(agent)
     await db.commit()

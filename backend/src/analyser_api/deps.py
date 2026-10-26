@@ -15,10 +15,15 @@ from analyser_api.auth.tokens import verify_token
 from analyser_api.config import Settings
 from analyser_api.db.session import session_dependency
 from analyser_api.errors import error_response
+from analyser_api.storage.base import AudioStorage
 
 
 def get_settings(request: Request) -> Settings:
     return cast(Settings, request.app.state.settings)
+
+
+def get_storage(request: Request) -> AudioStorage:
+    return cast(AudioStorage, request.app.state.storage)
 
 
 async def get_db(request: Request) -> AsyncIterator[AsyncSession]:
@@ -48,3 +53,4 @@ async def workspace_auth_handler(_: Request, __: Exception) -> JSONResponse:
 
 Database = Annotated[AsyncSession, Depends(get_db)]
 Workspace = Annotated[UUID, Depends(current_workspace)]
+Storage = Annotated[AudioStorage, Depends(get_storage)]
