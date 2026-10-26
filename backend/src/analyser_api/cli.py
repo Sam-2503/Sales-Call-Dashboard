@@ -14,7 +14,7 @@ from analyser_api.config import Settings
 def migrate() -> None:
     settings = Settings()
     config = Config(str(Path(__file__).parents[2] / "alembic.ini"))
-    config.set_main_option("sqlalchemy.url", settings.database_url_direct or settings.database_url)
+    config.set_main_option("sqlalchemy.url", settings.database_url)
     command.upgrade(config, "head")
 
 

@@ -18,8 +18,8 @@ The backend writes an uploaded recording to managed temporary storage, invokes
 `analyse_call`, and serializes the returned report for the dashboard.
 
 The backend uses Neon PostgreSQL for durable workspaces, jobs, and reports.
-Use the pooled Neon URL for `DATABASE_URL` and the direct Neon URL for
-`DATABASE_URL_DIRECT`; migrations use the direct connection.
+Set the single `DATABASE_URL` variable in `.env`; the API and migrations use
+that same connection string.
 
 ## Development
 
