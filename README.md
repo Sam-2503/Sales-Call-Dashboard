@@ -17,6 +17,10 @@ from call_analyser.pipeline import AnalyseInput, analyse_call
 The backend writes an uploaded recording to managed temporary storage, invokes
 `analyse_call`, and serializes the returned report for the dashboard.
 
+The backend uses Neon PostgreSQL for durable workspaces, jobs, and reports.
+Use the pooled Neon URL for `DATABASE_URL` and the direct Neon URL for
+`DATABASE_URL_DIRECT`; migrations use the direct connection.
+
 ## Development
 
 Requires Python 3.11+, [uv](https://docs.astral.sh/uv/), and `ffmpeg`/`ffprobe`.

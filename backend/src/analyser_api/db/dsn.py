@@ -9,7 +9,7 @@ def asyncpg_dsn(value: str) -> str:
     """Convert a PostgreSQL provider URL to a SQLAlchemy asyncpg URL."""
 
     parsed = urlsplit(value)
-    if parsed.scheme not in {"postgresql", "postgres"}:
+    if parsed.scheme not in {"postgresql", "postgres", "postgresql+asyncpg"}:
         raise ValueError("database URL must use the PostgreSQL scheme")
     query = dict(parse_qsl(parsed.query, keep_blank_values=True))
     sslmode = query.pop("sslmode", None)

@@ -14,6 +14,11 @@ def test_plain_postgres_dsn_preserves_non_provider_options() -> None:
     )
 
 
+def test_asyncpg_dsn_is_idempotent() -> None:
+    value = "postgresql+asyncpg://user:pass@host/db"
+    assert asyncpg_dsn(value) == value
+
+
 def test_metadata_contains_required_tables_and_indexes() -> None:
     tables = set(Base.metadata.tables)
     assert {
