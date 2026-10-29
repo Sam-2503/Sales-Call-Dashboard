@@ -1,0 +1,98 @@
+:root {
+  color-scheme: light;
+
+  --paper: #fcfcfb;
+  --surface: #ffffff;
+  --wash: #f2f4f3;
+  --hairline: #dde2e0;
+  --ink: #1b2430;
+  --muted: #5b6672;
+  --primary: #1b2430;
+  --primary-hover: #2c3847;
+  --on-primary: #fcfcfb;
+  --focus: #0b57d0;
+  --scrim: rgb(27 36 48 / 42%);
+
+  --rep: #2a6fdb;
+  --customer: #d9730d;
+  --highlight: #ffe27a;
+  --highlight-ink: #1b2430;
+
+  --status-done: #176b3a;
+  --status-partly: #8a5a00;
+  --status-missed: #a62a2a;
+  --status-done-wash: #e8f4ec;
+  --status-partly-wash: #fbf1dc;
+  --status-missed-wash: #fae9e9;
+
+  --panel-shadow: 0 1px 2px rgb(27 36 48 / 7%);
+  --sans:
+    "Atkinson Hyperlegible", "Atkinson Hyperlegible Next", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --measure: 70ch;
+  --mark-radius: 4px;
+  --control-radius: 8px;
+  --panel-radius: 16px;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #1a1a19;
+  --surface: #222322;
+  --wash: #262827;
+  --hairline: #3a3d3b;
+  --ink: #ededea;
+  --muted: #a0a6a3;
+  --primary: #ededea;
+  --primary-hover: #ffffff;
+  --on-primary: #1a1a19;
+  --focus: #9cc3ff;
+  --scrim: rgb(0 0 0 / 68%);
+
+  --rep: #5a8ceb;
+  --customer: #cc7014;
+  --highlight: #4a3f1a;
+  --highlight-ink: #fff9e5;
+
+  --status-done: #7cd6a6;
+  --status-partly: #f2c46d;
+  --status-missed: #ff8a8a;
+  --status-done-wash: #173426;
+  --status-partly-wash: #392c13;
+  --status-missed-wash: #3c1b1b;
+
+  --panel-shadow: 0 1px 2px rgb(0 0 0 / 45%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --paper: #1a1a19;
+    --surface: #222322;
+    --wash: #262827;
+    --hairline: #3a3d3b;
+    --ink: #ededea;
+    --muted: #a0a6a3;
+    --primary: #ededea;
+    --primary-hover: #ffffff;
+    --on-primary: #1a1a19;
+    --focus: #9cc3ff;
+    --scrim: rgb(0 0 0 / 68%);
+
+    --rep: #5a8ceb;
+    --customer: #cc7014;
+    --highlight: #4a3f1a;
+    --highlight-ink: #fff9e5;
+
+    --status-done: #7cd6a6;
+    --status-partly: #f2c46d;
+    --status-missed: #ff8a8a;
+    --status-done-wash: #173426;
+    --status-partly-wash: #392c13;
+    --status-missed-wash: #3c1b1b;
+
+    --panel-shadow: 0 1px 2px rgb(0 0 0 / 45%);
+  }
+}
