@@ -117,6 +117,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.playbook_ready = True
     app.state.workspace_limiter = RateLimiter(active.workspace_rate_limit_per_hour, 3600)
     app.state.demo_limiter = RateLimiter(active.demo_workspaces_per_ip_per_day, 86400)
+    app.state.upload_limiter = RateLimiter(active.upload_rate_limit_per_hour, 3600)
     app.state.janitor = Janitor(app.state.session_factory, app.state.storage, active)
     app.state.worker = None
     if active.worker_enabled and active.worker_mode != "off":

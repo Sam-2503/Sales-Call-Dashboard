@@ -13,14 +13,26 @@ from pathlib import Path
 from typing import Annotated
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Query,
+    Request,
+    UploadFile,
+)
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy import and_, or_, select
 
+from analyser_api.auth.ratelimit import client_ip
 from analyser_api.auth.tokens import issue_media_token, verify_media_token
 from analyser_api.config import Settings
 from analyser_api.db.models import Agent, Call, Job, JobEvent, Report
 from analyser_api.deps import Database, Storage, Workspace, get_settings
+from analyser_api.errors import APIError
 from analyser_api.schemas.api import (
     AudioUrlResponse,
     CallListResponse,
@@ -97,6 +109,7 @@ async def stream_upload(file: UploadFile, limit: int) -> tuple[Path, str, int]:
 
 @router.post("/calls", response_model=CallUploadResponse, status_code=202)
 async def upload_call(
+    request: Request,
     db: Database,
     workspace_id: Workspace,
     storage: Storage,
@@ -108,6 +121,14 @@ async def upload_call(
 ) -> CallUploadResponse:
     if not consent:
         raise HTTPException(status_code=400, detail="consent_required")
+    limiter = request.app.state.upload_limiter
+    ip = client_ip(request, settings.trusted_proxy_count)
+    if not limiter.allow(ip):
+        raise APIError(
+            "rate_limited",
+            message="Too many uploads. Try again later.",
+            headers={"Retry-After": str(limiter.retry_after(ip))},
+        )
     await check_call_quota(db, workspace_id, settings)
     if agent_id is not None:
         agent = await db.scalar(
