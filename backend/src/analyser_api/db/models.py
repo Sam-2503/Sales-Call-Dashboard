@@ -42,6 +42,7 @@ class Workspace(Base):
     created_at: Mapped[datetime] = timestamp_column()
     last_activity_at: Mapped[datetime] = timestamp_column()
     is_demo: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    label: Mapped[str | None] = mapped_column(String(120))
 
 
 class Agent(Base):
@@ -88,7 +89,7 @@ class Job(Base):
     )
     status: Mapped[str] = mapped_column(String(32), default="queued", nullable=False)
     attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    max_attempts: Mapped[int] = mapped_column(Integer, default=3, nullable=False)
+    max_attempts: Mapped[int] = mapped_column(Integer, default=2, nullable=False)
     available_at: Mapped[datetime] = timestamp_column()
     percent: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     current_stage: Mapped[str | None] = mapped_column(String(80))

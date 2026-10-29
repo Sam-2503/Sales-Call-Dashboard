@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 import hashlib
 import json
 import mimetypes
@@ -13,14 +14,26 @@ from typing import Annotated
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
-from fastapi.responses import Response
-from sqlalchemy import select
+from fastapi.responses import JSONResponse, Response
+from sqlalchemy import and_, or_, select
 
 from analyser_api.auth.tokens import issue_media_token, verify_media_token
 from analyser_api.config import Settings
-from analyser_api.db.models import Agent, Call, Job
+from analyser_api.db.models import Agent, Call, Job, JobEvent, Report
 from analyser_api.deps import Database, Storage, Workspace, get_settings
-from analyser_api.services.quotas import check_call_quota
+from analyser_api.schemas.api import (
+    AudioUrlResponse,
+    CallListResponse,
+    CallResponse,
+    CallSummary,
+    CallUploadResponse,
+    JobActionResponse,
+    JobEventResponse,
+    JobResponse,
+    ReanalyseRequest,
+    ReportResponse,
+)
+from analyser_api.services.quotas import check_call_quota, check_reanalysis_quota
 
 router = APIRouter(prefix="/api/v1", tags=["calls"])
 MEDIA_TYPES = {
@@ -82,7 +95,7 @@ async def stream_upload(file: UploadFile, limit: int) -> tuple[Path, str, int]:
     return path, digest.hexdigest(), size
 
 
-@router.post("/calls", status_code=202)
+@router.post("/calls", response_model=CallUploadResponse, status_code=202)
 async def upload_call(
     db: Database,
     workspace_id: Workspace,
@@ -92,7 +105,7 @@ async def upload_call(
     consent: Annotated[bool, Form(...)],
     title: Annotated[str | None, Form()] = None,
     agent_id: Annotated[UUID | None, Form()] = None,
-) -> dict[str, str]:
+) -> CallUploadResponse:
     if not consent:
         raise HTTPException(status_code=400, detail="consent_required")
     await check_call_quota(db, workspace_id, settings)
@@ -107,11 +120,10 @@ async def upload_call(
     try:
         duration, format_name = await probe_audio(path, settings.request_timeout_s)
         package_settings = settings.package
-        if (
-            duration < package_settings.min_duration_s
-            or duration > package_settings.max_audio_minutes * 60
-        ):
-            raise HTTPException(status_code=422, detail="invalid_audio_duration")
+        if duration > package_settings.max_audio_minutes * 60:
+            raise HTTPException(status_code=422, detail="audio_too_long")
+        if duration < package_settings.min_duration_s:
+            raise HTTPException(status_code=422, detail="audio_too_short")
         extension = next((ext for ext, mime in MEDIA_TYPES.items() if ext in format_name), "bin")
         call_id = uuid4()
         key = f"{workspace_id}/{call_id}/original.{extension}"
@@ -131,10 +143,16 @@ async def upload_call(
             consent_at=datetime.now(UTC),
         )
         db.add(call)
-        job = Job(call_id=call_id, status="queued")
+        job = Job(
+            call_id=call_id,
+            status="queued",
+            max_attempts=settings.job_max_attempts,
+            options={},
+            available_at=datetime.now(UTC),
+        )
         db.add(job)
         await db.commit()
-        return {"call_id": str(call_id), "job_id": str(job.id), "status": "queued"}
+        return CallUploadResponse(call_id=call_id, job_id=job.id, status="queued")
     except BaseException:
         await db.rollback()
         if key:
@@ -144,36 +162,337 @@ async def upload_call(
         path.unlink(missing_ok=True)
 
 
-@router.get("/calls")
-async def list_calls(workspace_id: Workspace, db: Database) -> list[dict[str, object]]:
-    result = await db.scalars(
-        select(Call).where(Call.workspace_id == workspace_id).order_by(Call.created_at.desc())
+def _encode_cursor(created_at: datetime, call_id: UUID) -> str:
+    return base64.urlsafe_b64encode(f"{created_at.isoformat()}|{call_id}".encode()).decode()
+
+
+def _decode_cursor(value: str | None) -> tuple[datetime, UUID] | None:
+    if not value:
+        return None
+    try:
+        raw = base64.urlsafe_b64decode(value.encode()).decode()
+        timestamp, _, call_id = raw.partition("|")
+        return datetime.fromisoformat(timestamp), UUID(call_id)
+    except (ValueError, UnicodeDecodeError):
+        raise HTTPException(status_code=422, detail="validation_error") from None
+
+
+@router.get("/calls", response_model=CallListResponse)
+async def list_calls(
+    workspace_id: Workspace,
+    db: Database,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
+    cursor: str | None = None,
+    agent_id: UUID | None = None,
+    status: str | None = None,
+) -> CallListResponse:
+    latest_job = (
+        select(Job.id)
+        .where(Job.call_id == Call.id)
+        .order_by(Job.created_at.desc())
+        .limit(1)
+        .scalar_subquery()
     )
-    return [
-        {
-            "id": call.id,
-            "title": call.title,
-            "status": call.status,
-            "created_at": call.created_at,
-            "duration_s": call.duration_s,
-        }
-        for call in result
+    query = (
+        select(Call, Report, Job, Agent)
+        .outerjoin(Report, Report.call_id == Call.id)
+        .outerjoin(Job, Job.id == latest_job)
+        .outerjoin(Agent, Agent.id == Call.agent_id)
+        .where(Call.workspace_id == workspace_id)
+    )
+    if agent_id is not None:
+        query = query.where(Call.agent_id == agent_id)
+    if status is not None:
+        query = query.where(Call.status == status)
+    decoded = _decode_cursor(cursor)
+    if decoded is not None:
+        created_at, call_id = decoded
+        query = query.where(
+            or_(
+                Call.created_at < created_at,
+                and_(Call.created_at == created_at, Call.id < call_id),
+            )
+        )
+    rows = list(
+        await db.execute(query.order_by(Call.created_at.desc(), Call.id.desc()).limit(limit + 1))
+    )
+    has_more = len(rows) > limit
+    rows = rows[:limit]
+    items = [
+        CallSummary(
+            id=call.id,
+            title=call.title,
+            status=call.status,
+            created_at=call.created_at,
+            duration_s=call.duration_s,
+            overall_score=report.overall_score if report else None,
+            outcome=report.outcome if report else None,
+            report_status=report.report_status if report else None,
+            percent=job.percent if job else None,
+            has_audio=bool(call.audio_key),
+            is_demo=call.is_demo,
+            agent_id=call.agent_id,
+            agent_name=agent.name if agent else None,
+        )
+        for call, report, job, agent in rows
     ]
+    next_cursor = _encode_cursor(items[-1].created_at, items[-1].id) if has_more and items else None
+    return CallListResponse(items=items, next_cursor=next_cursor)
 
 
-@router.get("/calls/{call_id}")
-async def get_call(call_id: UUID, workspace_id: Workspace, db: Database) -> dict[str, object]:
+@router.get("/calls/{call_id}", response_model=CallResponse)
+async def get_call(call_id: UUID, workspace_id: Workspace, db: Database) -> CallResponse:
+    row = (
+        await db.execute(
+            select(Call, Report, Job, Agent)
+            .outerjoin(Report, Report.call_id == Call.id)
+            .outerjoin(
+                Job,
+                Job.id
+                == (
+                    select(Job.id)
+                    .where(Job.call_id == Call.id)
+                    .order_by(Job.created_at.desc())
+                    .limit(1)
+                    .scalar_subquery()
+                ),
+            )
+            .outerjoin(Agent, Agent.id == Call.agent_id)
+            .where(Call.id == call_id, Call.workspace_id == workspace_id)
+        )
+    ).first()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Not found")
+    call, report, job, agent = row
+    return CallResponse(
+        id=call.id,
+        title=call.title,
+        status=call.status,
+        created_at=call.created_at,
+        duration_s=call.duration_s,
+        overall_score=report.overall_score if report else None,
+        outcome=report.outcome if report else None,
+        report_status=report.report_status if report else None,
+        percent=job.percent if job else None,
+        has_audio=bool(call.audio_key),
+        is_demo=call.is_demo,
+        agent_id=call.agent_id,
+        agent_name=agent.name if agent else None,
+        original_filename=call.original_filename,
+        consent_at=call.consent_at,
+        audio_mime=call.audio_mime,
+        audio_bytes=call.audio_bytes,
+        reanalysis_count=call.reanalysis_count,
+        completed_at=call.completed_at,
+        job=JobResponse(
+            id=job.id,
+            call_id=job.call_id,
+            status=job.status,
+            attempts=job.attempts,
+            max_attempts=job.max_attempts,
+            percent=job.percent,
+            current_stage=job.current_stage,
+            error_code=job.error_code,
+            error_message=job.error_message,
+            created_at=job.created_at,
+            started_at=job.started_at,
+            finished_at=job.finished_at,
+        )
+        if job
+        else None,
+    )
+
+
+async def _latest_job(call_id: UUID, workspace_id: UUID, db: Database) -> Job:
+    job = await db.scalar(
+        select(Job)
+        .join(Call, Call.id == Job.call_id)
+        .where(Job.call_id == call_id, Call.workspace_id == workspace_id)
+        .order_by(Job.created_at.desc())
+    )
+    if job is None:
+        raise HTTPException(status_code=404, detail="Not found")
+    return job
+
+
+async def _queue_reanalysis(
+    call_id: UUID,
+    workspace_id: UUID,
+    db: Database,
+    settings: Settings,
+    body: ReanalyseRequest,
+) -> JobActionResponse:
     call = await db.scalar(
         select(Call).where(Call.id == call_id, Call.workspace_id == workspace_id)
     )
     if call is None:
         raise HTTPException(status_code=404, detail="Not found")
-    return {
-        "id": call.id,
-        "title": call.title,
-        "status": call.status,
-        "duration_s": call.duration_s,
-    }
+    active_job = await db.scalar(
+        select(Job).where(
+            Job.call_id == call_id,
+            Job.status.in_(("queued", "running")),
+        )
+    )
+    if active_job is not None:
+        raise HTTPException(status_code=409, detail="conflict")
+    if call.status not in ("completed", "failed"):
+        raise HTTPException(status_code=409, detail="conflict")
+    if call.reanalysis_count >= settings.max_reanalyses_per_call:
+        raise HTTPException(status_code=409, detail="conflict")
+    await check_reanalysis_quota(db, settings)
+    call.status = "queued"
+    call.completed_at = None
+    call.reanalysis_count += 1
+    job = Job(
+        call_id=call_id,
+        status="queued",
+        max_attempts=settings.job_max_attempts,
+        options=body.model_dump(exclude_none=True),
+        available_at=datetime.now(UTC),
+    )
+    db.add(job)
+    await db.commit()
+    return JobActionResponse(call_id=call_id, job_id=job.id, status="queued")
+
+
+@router.post("/calls/{call_id}/reanalyse", response_model=JobActionResponse, status_code=202)
+async def reanalyse_call(
+    call_id: UUID,
+    workspace_id: Workspace,
+    db: Database,
+    settings: Annotated[Settings, Depends(get_settings)],
+    body: ReanalyseRequest | None = None,
+) -> JobActionResponse:
+    return await _queue_reanalysis(call_id, workspace_id, db, settings, body or ReanalyseRequest())
+
+
+@router.post("/calls/{call_id}/reanalyze", response_model=JobActionResponse, status_code=202)
+async def reanalyze_call(
+    call_id: UUID,
+    workspace_id: Workspace,
+    db: Database,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> JobActionResponse:
+    return await _queue_reanalysis(call_id, workspace_id, db, settings, ReanalyseRequest())
+
+
+@router.post("/calls/{call_id}/job/retry", response_model=JobActionResponse, status_code=202)
+async def retry_call_job(call_id: UUID, workspace_id: Workspace, db: Database) -> JobActionResponse:
+    call = await db.scalar(
+        select(Call).where(Call.id == call_id, Call.workspace_id == workspace_id)
+    )
+    if call is None:
+        raise HTTPException(status_code=404, detail="Not found")
+    job = await _latest_job(call_id, workspace_id, db)
+    if job.status in ("queued", "running"):
+        raise HTTPException(status_code=409, detail="analysis_in_progress")
+    if job.status not in ("failed", "canceled"):
+        raise HTTPException(status_code=409, detail="analysis_not_retryable")
+    job.status = "queued"
+    job.attempts = 0
+    job.percent = 0
+    job.current_stage = "queued"
+    job.error_code = None
+    job.error_message = None
+    job.started_at = None
+    job.finished_at = None
+    job.available_at = datetime.now(UTC)
+    call.status = "queued"
+    call.completed_at = None
+    await db.commit()
+    return JobActionResponse(call_id=call_id, job_id=job.id, status="queued")
+
+
+@router.post("/calls/{call_id}/job/cancel", response_model=JobActionResponse)
+async def cancel_call_job(
+    call_id: UUID, workspace_id: Workspace, db: Database
+) -> JobActionResponse:
+    job = await _latest_job(call_id, workspace_id, db)
+    if job.status == "running":
+        raise HTTPException(status_code=409, detail="analysis_already_running")
+    if job.status != "queued":
+        raise HTTPException(status_code=409, detail="analysis_not_active")
+    now = datetime.now(UTC)
+    job.status = "canceled"
+    job.finished_at = now
+    job.locked_by = None
+    job.locked_at = None
+    job.heartbeat_at = now
+    job.current_stage = "canceled"
+    job.error_code = "canceled"
+    job.error_message = "analysis canceled by user"
+    call = await db.get(Call, job.call_id)
+    if call is not None:
+        call.status = "canceled"
+    db.add(
+        JobEvent(
+            job_id=job.id,
+            stage="analysis",
+            status="canceled",
+            percent=job.percent,
+            detail={"reason": "user_requested"},
+        )
+    )
+    await db.commit()
+    return JobActionResponse(call_id=call_id, job_id=job.id, status="canceled")
+
+
+@router.get("/calls/{call_id}/job", response_model=JobResponse)
+async def get_call_job(call_id: UUID, workspace_id: Workspace, db: Database) -> JobResponse:
+    job = await _latest_job(call_id, workspace_id, db)
+    return JobResponse(
+        id=job.id,
+        call_id=job.call_id,
+        status=job.status,
+        attempts=job.attempts,
+        max_attempts=job.max_attempts,
+        percent=job.percent,
+        current_stage=job.current_stage,
+        error_code=job.error_code,
+        error_message=job.error_message,
+        created_at=job.created_at,
+        started_at=job.started_at,
+        finished_at=job.finished_at,
+    )
+
+
+@router.get("/calls/{call_id}/job/events", response_model=list[JobEventResponse])
+async def get_call_job_events(
+    call_id: UUID, workspace_id: Workspace, db: Database
+) -> list[JobEventResponse]:
+    job = await _latest_job(call_id, workspace_id, db)
+    events = await db.scalars(
+        select(JobEvent).where(JobEvent.job_id == job.id).order_by(JobEvent.id.asc())
+    )
+    return [
+        JobEventResponse(
+            id=event.id,
+            stage=event.stage,
+            status=event.status,
+            percent=event.percent,
+            elapsed_s=event.elapsed_s,
+            detail=event.detail,
+            ts=event.ts,
+        )
+        for event in events
+    ]
+
+
+@router.get("/calls/{call_id}/report", response_model=ReportResponse)
+async def get_call_report(call_id: UUID, workspace_id: Workspace, db: Database) -> JSONResponse:
+    report = await db.scalar(
+        select(Report)
+        .join(Call, Call.id == Report.call_id)
+        .where(Report.call_id == call_id, Call.workspace_id == workspace_id)
+    )
+    if report is None:
+        raise HTTPException(status_code=409, detail="not_ready")
+    payload = dict(report.report)
+    payload.pop("debug", None)
+    return JSONResponse(
+        payload,
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @router.delete("/calls/{call_id}", status_code=204)
@@ -189,26 +508,22 @@ async def delete_call(
         await storage.delete(call.audio_key)
     await db.delete(call)
     await db.commit()
-    if call.audio_key:
-        await storage.delete(call.audio_key)
-    await db.delete(call)
-    await db.commit()
 
 
-@router.get("/calls/{call_id}/audio-url")
+@router.get("/calls/{call_id}/audio-url", response_model=AudioUrlResponse)
 async def audio_url(
     call_id: UUID,
     workspace_id: Workspace,
     db: Database,
     settings: Annotated[Settings, Depends(get_settings)],
-) -> dict[str, str]:
+) -> AudioUrlResponse:
     call = await db.scalar(
         select(Call).where(Call.id == call_id, Call.workspace_id == workspace_id)
     )
     if call is None or not call.audio_key:
         raise HTTPException(status_code=404, detail="Not found")
     token = issue_media_token(workspace_id, call_id, settings)
-    return {"url": f"/api/v1/media/audio?t={token}&call_id={call_id}"}
+    return AudioUrlResponse(url=f"/api/v1/media/audio?t={token}&call_id={call_id}")
 
 
 @router.get("/media/audio")

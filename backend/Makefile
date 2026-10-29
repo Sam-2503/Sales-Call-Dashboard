@@ -1,4 +1,4 @@
-.PHONY: install fmt lint typecheck test check dev migrate openapi openapi-check
+.PHONY: install fmt lint typecheck test check dev migrate worker seed-demo openapi openapi-check
 
 install:
 	uv sync --extra dev
@@ -19,3 +19,7 @@ dev:
 	uv run uvicorn --factory analyser_api.app:create_app --reload
 migrate:
 	uv run analyser-api migrate
+worker:
+	uv run analyser-api worker
+seed-demo:
+	uv run analyser-api seed-demo

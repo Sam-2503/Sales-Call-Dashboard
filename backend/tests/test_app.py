@@ -9,7 +9,7 @@ from analyser_api.config import Settings
 
 @pytest.fixture
 def client() -> Iterator[TestClient]:
-    app = create_app(Settings(_env_file=None, jwt_secret="x" * 32))
+    app = create_app(Settings(_env_file=None, jwt_secret="x" * 32, worker_enabled=False))
     with TestClient(app) as test_client:
         yield test_client
 
@@ -52,6 +52,6 @@ def test_healthz_does_not_need_a_database(client: TestClient) -> None:
 
 
 def test_create_app_works_with_dev_defaults() -> None:
-    app = create_app(Settings(_env_file=None))
+    app = create_app(Settings(_env_file=None, worker_enabled=False))
     assert app.title == "Call Analyser API"
     assert app.state.settings.environment == "dev"

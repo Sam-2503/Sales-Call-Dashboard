@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     # Runtime and edge behaviour.
     environment: Literal["dev", "test", "prod"] = "dev"
     log_level: str = "INFO"
+    host: str = "0.0.0.0"
+    port: int = Field(default=7860, ge=1, le=65535)
     request_timeout_s: float = Field(default=30, gt=0)
     cors_origins: list[str] = Field(default_factory=list)
     trusted_proxy_count: int = Field(default=1, ge=0)
@@ -81,7 +83,7 @@ class Settings(BaseSettings):
     playbook_artifact_prefix: str | None = None
 
     # Worker and event delivery.
-    worker_enabled: bool = False
+    worker_enabled: bool = True
     worker_mode: Literal["thread", "inline", "off"] = "thread"
     worker_poll_interval_s: float = Field(default=2, gt=0)
     worker_heartbeat_interval_s: float = Field(default=15, gt=0)
