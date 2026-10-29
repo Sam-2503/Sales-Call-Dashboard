@@ -14,6 +14,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=7860 \
     STATIC_DIR=/app/static \
+    RUBRIC_PATH=/app/rubrics/sales_v1.yaml \
+    CHROMA_PATH=/app/data/chroma \
+    STORAGE_DIR=/app/data/audio \
+    WORK_DIR=/app/data/work \
     UV_LINK_MODE=copy
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ffmpeg ca-certificates \
@@ -30,9 +34,10 @@ RUN cd backend && uv sync --frozen --no-dev
 
 COPY --from=frontend /dist ./static
 RUN useradd --create-home --uid 1000 app \
-    && mkdir -p /app/data/chroma /app/data/audio \
+    && mkdir -p /app/data/chroma /app/data/audio /app/data/work \
     && chown -R app:app /app
 USER app
+WORKDIR /app/backend
 ENV PATH="/app/backend/.venv/bin:${PATH}"
 EXPOSE 7860
 CMD ["sh", "-c", "analyser-api migrate && analyser-api serve"]

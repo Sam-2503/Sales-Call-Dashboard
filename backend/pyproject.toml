@@ -60,5 +60,5 @@ markers = [
 ]
 
 [[tool.mypy.overrides]]
-module = ["boto3", "call_analyser.*"]
+module = ["boto3", "botocore.*", "call_analyser.*"]
 ignore_missing_imports = true
