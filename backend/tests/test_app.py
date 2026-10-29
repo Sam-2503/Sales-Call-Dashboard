@@ -55,3 +55,5 @@ def test_create_app_works_with_dev_defaults() -> None:
     app = create_app(Settings(_env_file=None, worker_enabled=False))
     assert app.title == "Call Analyser API"
     assert app.state.settings.environment == "dev"
+    # Dev convenience: a missing JWT secret is generated, never accepted in prod.
+    assert app.state.settings.jwt_secret

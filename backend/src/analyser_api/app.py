@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import secrets
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -101,6 +102,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     active = settings or Settings()
+    if active.environment == "dev" and not active.jwt_secret:
+        # Dev convenience only; restarting invalidates previously issued tokens.
+        active.jwt_secret = secrets.token_urlsafe(32)
     configure_logging(active.log_level)
 
     app = FastAPI(
