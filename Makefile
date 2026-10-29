@@ -1,14 +1,16 @@
-.PHONY: install fmt lint typecheck check backend-check check-all
+.PHONY: install fmt lint typecheck test check backend-check check-all
 
 install:
 	uv sync --extra dev
 fmt:
-	uv run ruff format src
+	uv run ruff format src tests
 lint:
-	uv run ruff check src
+	uv run ruff check src tests
 typecheck:
 	uv run mypy src
-check: lint typecheck
+test:
+	uv run pytest
+check: lint typecheck test
 backend-check:
 	$(MAKE) -C backend check
 check-all: check backend-check

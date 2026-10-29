@@ -30,6 +30,20 @@ make install
 make check
 ```
 
+Configuration is read from environment variables and `.env`. Copy
+[`.env.example`](.env.example) to `.env` and fill in only what a stage needs;
+never commit a real key.
+
+## Tests
+
+```bash
+make test
+```
+
+Tests run offline and must not touch the network, real audio, or a real book.
+Cases marked `@pytest.mark.live` are skipped unless `GEMINI_API_KEY` is set.
+`make check` runs ruff, strict mypy over `src/`, and the test suite.
+
 ## Analysis flow
 
 1. Validate and normalize the uploaded audio.

@@ -14,14 +14,18 @@
 ```bash
 make install
 make fmt
+make test
 make check
 ```
+
+Every stage ends with `make check` (lint, strict type-check, tests) green.
 
 ## Layout
 - `src/call_analyser/`: importable analysis package.
 - `src/call_analyser/schemas/`: public Pydantic contracts.
 - `src/call_analyser/prompts/`: versioned prompt resources.
 - `src/call_analyser/playbook/`: extraction, indexing and retrieval.
+- `tests/`: offline deterministic tests; `live` tests need `GEMINI_API_KEY`.
 
 ## Conventions
 - Use float seconds internally; format only at the edge.

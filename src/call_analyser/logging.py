@@ -7,7 +7,7 @@ import logging
 REDACTED_TRANSCRIPT = "[transcript redacted]"
 
 
-def transcript_for_log(text: str, *, allow_transcripts: bool) -> str:
+def transcript_for_log(text: str, *, allow_transcripts: bool = False) -> str:
     """Return text only after the explicit transcript logging opt-in."""
     return text if allow_transcripts else REDACTED_TRANSCRIPT
 

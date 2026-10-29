@@ -37,7 +37,7 @@ async def compute_metrics(input: MetricsInput, config: RunnableConfig) -> AudioM
         find_dead_air(
             input.audio_path,
             threshold_db=settings.silence_db,
-            min_duration_s=settings.dead_air_threshold_s,
+            min_duration_s=settings.dead_air_s,
         )
         if input.audio_path is not None
         else []
