@@ -1,7 +1,7 @@
 from uuid import uuid4
 
-import pytest
 import jwt
+import pytest
 
 from analyser_api.auth.tokens import issue_token, verify_token
 from analyser_api.config import Settings

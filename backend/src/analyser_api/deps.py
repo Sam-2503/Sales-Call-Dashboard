@@ -14,7 +14,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from analyser_api.auth.tokens import verify_token
 from analyser_api.config import Settings
 from analyser_api.db.session import session_dependency
-from analyser_api.errors import error_response
+from analyser_api.errors import error_response, request_id_for
+from analyser_api.logging import set_workspace_id
 from analyser_api.storage.base import AudioStorage
 
 
@@ -38,17 +39,25 @@ async def current_workspace(
     if not authorization or not authorization.startswith("Bearer "):
         raise WorkspaceAuthError()
     try:
-        return verify_token(authorization[7:], settings)
+        workspace_id = verify_token(authorization[7:], settings)
     except (ValueError, jwt.InvalidTokenError) as error:
         raise WorkspaceAuthError() from error
+    set_workspace_id(str(workspace_id))
+    return workspace_id
 
 
 class WorkspaceAuthError(Exception):
     pass
 
 
-async def workspace_auth_handler(_: Request, __: Exception) -> JSONResponse:
-    return error_response("unauthorized", "A valid workspace token is required.", 401)
+async def workspace_auth_handler(request: Request, _: Exception) -> JSONResponse:
+    return error_response(
+        "unauthorized",
+        "A valid workspace token is required.",
+        401,
+        request_id_for(request),
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
 
 Database = Annotated[AsyncSession, Depends(get_db)]

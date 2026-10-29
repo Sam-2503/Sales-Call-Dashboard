@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Annotated
 from uuid import UUID, uuid4
 
-from call_analyser.config import Settings as PackageSettings
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.responses import Response
 from sqlalchemy import select
@@ -107,7 +106,7 @@ async def upload_call(
     key: str | None = None
     try:
         duration, format_name = await probe_audio(path, settings.request_timeout_s)
-        package_settings = PackageSettings()
+        package_settings = settings.package
         if (
             duration < package_settings.min_duration_s
             or duration > package_settings.max_audio_minutes * 60
