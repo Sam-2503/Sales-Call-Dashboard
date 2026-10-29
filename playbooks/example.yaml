@@ -1,0 +1,7 @@
+# Placeholder metadata only. Put the real (private) PDF next to this file and
+# index it once with the package CLI. Never commit a copyrighted PDF.
+slug: book
+title: Sales Playbook
+author: Example Author
+edition: "1"
+source_pdf: book.pdf

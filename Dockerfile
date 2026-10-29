@@ -15,6 +15,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PORT=7860 \
     STATIC_DIR=/app/static \
     RUBRIC_PATH=/app/rubrics/sales_v1.yaml \
+    PLAYBOOK_PATH=/app/playbooks/example.yaml \
     CHROMA_PATH=/app/data/chroma \
     STORAGE_DIR=/app/data/audio \
     WORK_DIR=/app/data/work \
@@ -29,6 +30,7 @@ COPY pyproject.toml uv.lock README.md AGENTS.md ./
 COPY src ./src
 COPY rubrics ./rubrics
 COPY schemas ./schemas
+COPY playbooks ./playbooks
 COPY backend ./backend
 RUN cd backend && uv sync --frozen --no-dev
 
