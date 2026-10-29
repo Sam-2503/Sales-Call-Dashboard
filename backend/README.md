@@ -92,8 +92,9 @@ make seed-demo
 ```
 
 Run `make backend-check` from the repository root for the same check. The
-`db`-marked tests require a real PostgreSQL; set `TEST_DATABASE_URL` or install
-local `initdb`/`pg_ctl`. Without either they are skipped and reported.
+`db`-marked tests require a real PostgreSQL; set `TEST_DATABASE_URL`, install
+local `initdb`/`pg_ctl`, or use the Python 3.12 dev extra, which installs the
+embedded `pgserver` binaries. On Python 3.13 those tests skip and are reported.
 
 ## Configuration
 

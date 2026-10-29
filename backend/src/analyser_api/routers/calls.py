@@ -212,6 +212,7 @@ async def list_calls(
         .where(Job.call_id == Call.id)
         .order_by(Job.created_at.desc())
         .limit(1)
+        .correlate(Call)
         .scalar_subquery()
     )
     query = (
@@ -275,6 +276,7 @@ async def get_call(call_id: UUID, workspace_id: Workspace, db: Database) -> Call
                     .where(Job.call_id == Call.id)
                     .order_by(Job.created_at.desc())
                     .limit(1)
+                    .correlate(Call)
                     .scalar_subquery()
                 ),
             )

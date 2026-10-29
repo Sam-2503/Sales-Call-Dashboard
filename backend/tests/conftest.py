@@ -7,7 +7,6 @@ import shutil
 import socket
 import subprocess
 import tempfile
-import time
 from collections.abc import AsyncIterator, Iterator
 from pathlib import Path
 
@@ -36,46 +35,62 @@ def database_url() -> Iterator[str]:
         return
     initdb = shutil.which("initdb")
     pg_ctl = shutil.which("pg_ctl")
-    if not initdb or not pg_ctl:
-        pytest.skip(
-            "PostgreSQL is unavailable: set TEST_DATABASE_URL or install initdb/pg_ctl. "
-            "Database tests were not run."
-        )
-    directory = tempfile.mkdtemp(prefix="analyser-pg-")
-    data = Path(directory) / "data"
-    port = _free_port()
-    user = getpass.getuser()
+    if initdb and pg_ctl:
+        directory = tempfile.mkdtemp(prefix="analyser-pg-")
+        data = Path(directory) / "data"
+        port = _free_port()
+        user = getpass.getuser()
+        try:
+            subprocess.run(
+                [initdb, "-D", str(data), "--auth=trust", "-U", user],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+            )
+            subprocess.run(
+                [
+                    pg_ctl,
+                    "-D",
+                    str(data),
+                    "-o",
+                    f"-p {port} -h 127.0.0.1",
+                    "-w",
+                    "start",
+                ],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+            )
+            yield f"postgresql+asyncpg://{user}@127.0.0.1:{port}/postgres"
+        finally:
+            subprocess.run(
+                [pg_ctl, "-D", str(data), "-m", "immediate", "stop"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+                check=False,
+            )
+            shutil.rmtree(directory, ignore_errors=True)
+        return
     try:
-        subprocess.run(
-            [initdb, "-D", str(data), "--auth=trust", "-U", user],
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT,
+        import fasteners
+        from pgserver import PostgresServer, get_server
+    except ImportError:
+        pytest.skip(
+            "PostgreSQL is unavailable: set TEST_DATABASE_URL, install initdb/pg_ctl, "
+            "or run the test extra on Python 3.12 with pgserver. Database tests were not run."
         )
-        subprocess.run(
-            [
-                pg_ctl,
-                "-D",
-                str(data),
-                "-o",
-                f"-p {port} -h 127.0.0.1",
-                "-w",
-                "start",
-            ],
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT,
-        )
-        yield f"postgresql+asyncpg://{user}@127.0.0.1:{port}/postgres"
+    runtime = Path(tempfile.mkdtemp(prefix="analyser-pgserver-runtime-"))
+    PostgresServer.runtime_path = runtime
+    PostgresServer.lock_path = runtime / ".lockfile"
+    PostgresServer._lock = fasteners.InterProcessLock(PostgresServer.lock_path)
+    directory = tempfile.mkdtemp(prefix="analyser-pgserver-")
+    server = get_server(Path(directory) / "data", cleanup_mode="delete")
+    try:
+        yield server.get_uri().replace("postgresql://", "postgresql+asyncpg://", 1)
     finally:
-        subprocess.run(
-            [pg_ctl, "-D", str(data), "-m", "immediate", "stop"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT,
-            check=False,
-        )
+        server.cleanup()
         shutil.rmtree(directory, ignore_errors=True)
-        time.sleep(0)
+        shutil.rmtree(runtime, ignore_errors=True)
 
 
 @pytest.fixture
