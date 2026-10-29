@@ -7,7 +7,7 @@
 - Findings need a quote and a time. Never invent a benchmark or a target.
 - Use semantic HTML and Radix primitives. Status always has an icon and a word.
 - Treat transcript and quote text as text. Never inject HTML.
-- No network in tests. No third-party requests at runtime.
+- No network in tests; MSW handlers cover every API call. No third-party requests at runtime.
 - Keep the initial JavaScript under the `BUNDLE_BUDGET_KB` budget.
 
 ## Commands

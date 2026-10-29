@@ -1,0 +1,2048 @@
+{
+  "schema_version": "1.0",
+  "status": "ok",
+  "reason": null,
+  "meta": {
+    "pipeline_version": "synthetic-fixture-2026-10",
+    "rubric_id": "sales_v1",
+    "rubric_version": "0.1",
+    "playbook_identity": {
+      "book_title": "The Sales Acceleration Formula",
+      "source": "synthetic"
+    },
+    "models": {
+      "review": "synthetic-fixture"
+    },
+    "prompt_ids": {},
+    "audio_sha256": null,
+    "duration_s": 222.0,
+    "usage": {},
+    "stage_latency_s": {}
+  },
+  "transcript": {
+    "duration_s": 222.0,
+    "language": "en",
+    "source_model": "synthetic-fixture",
+    "speaker_roles": {
+      "Priya": "agent",
+      "Sam": "customer"
+    },
+    "speakers": [
+      "Priya",
+      "Sam"
+    ],
+    "timing": "segment_interpolated",
+    "turns": [
+      {
+        "id": "T001",
+        "start_s": 0.0,
+        "end_s": 8.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "Hi Sam, it's Priya from Northstar. Is now still a good time for a quick call?",
+        "words": [
+          {
+            "text": "Hi",
+            "start_s": 0.0,
+            "end_s": 0.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Sam,",
+            "start_s": 0.5,
+            "end_s": 1.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "it's",
+            "start_s": 1.0,
+            "end_s": 1.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Priya",
+            "start_s": 1.5,
+            "end_s": 2.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "from",
+            "start_s": 2.0,
+            "end_s": 2.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Northstar.",
+            "start_s": 2.5,
+            "end_s": 3.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Is",
+            "start_s": 3.0,
+            "end_s": 3.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "now",
+            "start_s": 3.5,
+            "end_s": 4.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "still",
+            "start_s": 4.0,
+            "end_s": 4.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "a",
+            "start_s": 4.5,
+            "end_s": 5.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "good",
+            "start_s": 5.0,
+            "end_s": 5.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "time",
+            "start_s": 5.5,
+            "end_s": 6.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "for",
+            "start_s": 6.0,
+            "end_s": 6.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "a",
+            "start_s": 6.5,
+            "end_s": 7.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "quick",
+            "start_s": 7.0,
+            "end_s": 7.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "call?",
+            "start_s": 7.5,
+            "end_s": 8.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T002",
+        "start_s": 8.0,
+        "end_s": 14.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "Sure, I have a couple of minutes before my next meeting.",
+        "words": [
+          {
+            "text": "Sure,",
+            "start_s": 8.0,
+            "end_s": 8.55,
+            "speaker": "Sam"
+          },
+          {
+            "text": "I",
+            "start_s": 8.55,
+            "end_s": 9.09,
+            "speaker": "Sam"
+          },
+          {
+            "text": "have",
+            "start_s": 9.09,
+            "end_s": 9.64,
+            "speaker": "Sam"
+          },
+          {
+            "text": "a",
+            "start_s": 9.64,
+            "end_s": 10.18,
+            "speaker": "Sam"
+          },
+          {
+            "text": "couple",
+            "start_s": 10.18,
+            "end_s": 10.73,
+            "speaker": "Sam"
+          },
+          {
+            "text": "of",
+            "start_s": 10.73,
+            "end_s": 11.27,
+            "speaker": "Sam"
+          },
+          {
+            "text": "minutes",
+            "start_s": 11.27,
+            "end_s": 11.82,
+            "speaker": "Sam"
+          },
+          {
+            "text": "before",
+            "start_s": 11.82,
+            "end_s": 12.36,
+            "speaker": "Sam"
+          },
+          {
+            "text": "my",
+            "start_s": 12.36,
+            "end_s": 12.91,
+            "speaker": "Sam"
+          },
+          {
+            "text": "next",
+            "start_s": 12.91,
+            "end_s": 13.45,
+            "speaker": "Sam"
+          },
+          {
+            "text": "meeting.",
+            "start_s": 13.45,
+            "end_s": 14.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T003",
+        "start_s": 14.0,
+        "end_s": 36.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "Great. I work with operations teams that are trying to keep orders moving without adding headcount. I wanted to understand how your team handles that today.",
+        "words": [
+          {
+            "text": "Great.",
+            "start_s": 14.0,
+            "end_s": 14.85,
+            "speaker": "Priya"
+          },
+          {
+            "text": "I",
+            "start_s": 14.85,
+            "end_s": 15.69,
+            "speaker": "Priya"
+          },
+          {
+            "text": "work",
+            "start_s": 15.69,
+            "end_s": 16.54,
+            "speaker": "Priya"
+          },
+          {
+            "text": "with",
+            "start_s": 16.54,
+            "end_s": 17.38,
+            "speaker": "Priya"
+          },
+          {
+            "text": "operations",
+            "start_s": 17.38,
+            "end_s": 18.23,
+            "speaker": "Priya"
+          },
+          {
+            "text": "teams",
+            "start_s": 18.23,
+            "end_s": 19.08,
+            "speaker": "Priya"
+          },
+          {
+            "text": "that",
+            "start_s": 19.08,
+            "end_s": 19.92,
+            "speaker": "Priya"
+          },
+          {
+            "text": "are",
+            "start_s": 19.92,
+            "end_s": 20.77,
+            "speaker": "Priya"
+          },
+          {
+            "text": "trying",
+            "start_s": 20.77,
+            "end_s": 21.62,
+            "speaker": "Priya"
+          },
+          {
+            "text": "to",
+            "start_s": 21.62,
+            "end_s": 22.46,
+            "speaker": "Priya"
+          },
+          {
+            "text": "keep",
+            "start_s": 22.46,
+            "end_s": 23.31,
+            "speaker": "Priya"
+          },
+          {
+            "text": "orders",
+            "start_s": 23.31,
+            "end_s": 24.15,
+            "speaker": "Priya"
+          },
+          {
+            "text": "moving",
+            "start_s": 24.15,
+            "end_s": 25.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "without",
+            "start_s": 25.0,
+            "end_s": 25.85,
+            "speaker": "Priya"
+          },
+          {
+            "text": "adding",
+            "start_s": 25.85,
+            "end_s": 26.69,
+            "speaker": "Priya"
+          },
+          {
+            "text": "headcount.",
+            "start_s": 26.69,
+            "end_s": 27.54,
+            "speaker": "Priya"
+          },
+          {
+            "text": "I",
+            "start_s": 27.54,
+            "end_s": 28.38,
+            "speaker": "Priya"
+          },
+          {
+            "text": "wanted",
+            "start_s": 28.38,
+            "end_s": 29.23,
+            "speaker": "Priya"
+          },
+          {
+            "text": "to",
+            "start_s": 29.23,
+            "end_s": 30.08,
+            "speaker": "Priya"
+          },
+          {
+            "text": "understand",
+            "start_s": 30.08,
+            "end_s": 30.92,
+            "speaker": "Priya"
+          },
+          {
+            "text": "how",
+            "start_s": 30.92,
+            "end_s": 31.77,
+            "speaker": "Priya"
+          },
+          {
+            "text": "your",
+            "start_s": 31.77,
+            "end_s": 32.62,
+            "speaker": "Priya"
+          },
+          {
+            "text": "team",
+            "start_s": 32.62,
+            "end_s": 33.46,
+            "speaker": "Priya"
+          },
+          {
+            "text": "handles",
+            "start_s": 33.46,
+            "end_s": 34.31,
+            "speaker": "Priya"
+          },
+          {
+            "text": "that",
+            "start_s": 34.31,
+            "end_s": 35.15,
+            "speaker": "Priya"
+          },
+          {
+            "text": "today.",
+            "start_s": 35.15,
+            "end_s": 36.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T004",
+        "start_s": 36.0,
+        "end_s": 46.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "We use a spreadsheet and a lot of manual checks. It's getting messy as we grow.",
+        "words": [
+          {
+            "text": "We",
+            "start_s": 36.0,
+            "end_s": 36.62,
+            "speaker": "Sam"
+          },
+          {
+            "text": "use",
+            "start_s": 36.62,
+            "end_s": 37.25,
+            "speaker": "Sam"
+          },
+          {
+            "text": "a",
+            "start_s": 37.25,
+            "end_s": 37.88,
+            "speaker": "Sam"
+          },
+          {
+            "text": "spreadsheet",
+            "start_s": 37.88,
+            "end_s": 38.5,
+            "speaker": "Sam"
+          },
+          {
+            "text": "and",
+            "start_s": 38.5,
+            "end_s": 39.12,
+            "speaker": "Sam"
+          },
+          {
+            "text": "a",
+            "start_s": 39.12,
+            "end_s": 39.75,
+            "speaker": "Sam"
+          },
+          {
+            "text": "lot",
+            "start_s": 39.75,
+            "end_s": 40.38,
+            "speaker": "Sam"
+          },
+          {
+            "text": "of",
+            "start_s": 40.38,
+            "end_s": 41.0,
+            "speaker": "Sam"
+          },
+          {
+            "text": "manual",
+            "start_s": 41.0,
+            "end_s": 41.62,
+            "speaker": "Sam"
+          },
+          {
+            "text": "checks.",
+            "start_s": 41.62,
+            "end_s": 42.25,
+            "speaker": "Sam"
+          },
+          {
+            "text": "It's",
+            "start_s": 42.25,
+            "end_s": 42.88,
+            "speaker": "Sam"
+          },
+          {
+            "text": "getting",
+            "start_s": 42.88,
+            "end_s": 43.5,
+            "speaker": "Sam"
+          },
+          {
+            "text": "messy",
+            "start_s": 43.5,
+            "end_s": 44.12,
+            "speaker": "Sam"
+          },
+          {
+            "text": "as",
+            "start_s": 44.12,
+            "end_s": 44.75,
+            "speaker": "Sam"
+          },
+          {
+            "text": "we",
+            "start_s": 44.75,
+            "end_s": 45.38,
+            "speaker": "Sam"
+          },
+          {
+            "text": "grow.",
+            "start_s": 45.38,
+            "end_s": 46.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T005",
+        "start_s": 46.0,
+        "end_s": 62.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "That's really common. How much time does the team lose to those manual checks each week?",
+        "words": [
+          {
+            "text": "That's",
+            "start_s": 46.0,
+            "end_s": 47.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "really",
+            "start_s": 47.0,
+            "end_s": 48.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "common.",
+            "start_s": 48.0,
+            "end_s": 49.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "How",
+            "start_s": 49.0,
+            "end_s": 50.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "much",
+            "start_s": 50.0,
+            "end_s": 51.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "time",
+            "start_s": 51.0,
+            "end_s": 52.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "does",
+            "start_s": 52.0,
+            "end_s": 53.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "the",
+            "start_s": 53.0,
+            "end_s": 54.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "team",
+            "start_s": 54.0,
+            "end_s": 55.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "lose",
+            "start_s": 55.0,
+            "end_s": 56.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "to",
+            "start_s": 56.0,
+            "end_s": 57.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "those",
+            "start_s": 57.0,
+            "end_s": 58.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "manual",
+            "start_s": 58.0,
+            "end_s": 59.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "checks",
+            "start_s": 59.0,
+            "end_s": 60.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "each",
+            "start_s": 60.0,
+            "end_s": 61.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "week?",
+            "start_s": 61.0,
+            "end_s": 62.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T006",
+        "start_s": 62.0,
+        "end_s": 74.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "Probably five hours a week, maybe more when orders pile up.",
+        "words": [
+          {
+            "text": "Probably",
+            "start_s": 62.0,
+            "end_s": 63.09,
+            "speaker": "Sam"
+          },
+          {
+            "text": "five",
+            "start_s": 63.09,
+            "end_s": 64.18,
+            "speaker": "Sam"
+          },
+          {
+            "text": "hours",
+            "start_s": 64.18,
+            "end_s": 65.27,
+            "speaker": "Sam"
+          },
+          {
+            "text": "a",
+            "start_s": 65.27,
+            "end_s": 66.36,
+            "speaker": "Sam"
+          },
+          {
+            "text": "week,",
+            "start_s": 66.36,
+            "end_s": 67.45,
+            "speaker": "Sam"
+          },
+          {
+            "text": "maybe",
+            "start_s": 67.45,
+            "end_s": 68.55,
+            "speaker": "Sam"
+          },
+          {
+            "text": "more",
+            "start_s": 68.55,
+            "end_s": 69.64,
+            "speaker": "Sam"
+          },
+          {
+            "text": "when",
+            "start_s": 69.64,
+            "end_s": 70.73,
+            "speaker": "Sam"
+          },
+          {
+            "text": "orders",
+            "start_s": 70.73,
+            "end_s": 71.82,
+            "speaker": "Sam"
+          },
+          {
+            "text": "pile",
+            "start_s": 71.82,
+            "end_s": 72.91,
+            "speaker": "Sam"
+          },
+          {
+            "text": "up.",
+            "start_s": 72.91,
+            "end_s": 74.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T007",
+        "start_s": 74.0,
+        "end_s": 92.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "That's a lot. We can definitely cut that in half, and most teams see the difference in the first month.",
+        "words": [
+          {
+            "text": "That's",
+            "start_s": 74.0,
+            "end_s": 74.9,
+            "speaker": "Priya"
+          },
+          {
+            "text": "a",
+            "start_s": 74.9,
+            "end_s": 75.8,
+            "speaker": "Priya"
+          },
+          {
+            "text": "lot.",
+            "start_s": 75.8,
+            "end_s": 76.7,
+            "speaker": "Priya"
+          },
+          {
+            "text": "We",
+            "start_s": 76.7,
+            "end_s": 77.6,
+            "speaker": "Priya"
+          },
+          {
+            "text": "can",
+            "start_s": 77.6,
+            "end_s": 78.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "definitely",
+            "start_s": 78.5,
+            "end_s": 79.4,
+            "speaker": "Priya"
+          },
+          {
+            "text": "cut",
+            "start_s": 79.4,
+            "end_s": 80.3,
+            "speaker": "Priya"
+          },
+          {
+            "text": "that",
+            "start_s": 80.3,
+            "end_s": 81.2,
+            "speaker": "Priya"
+          },
+          {
+            "text": "in",
+            "start_s": 81.2,
+            "end_s": 82.1,
+            "speaker": "Priya"
+          },
+          {
+            "text": "half,",
+            "start_s": 82.1,
+            "end_s": 83.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "and",
+            "start_s": 83.0,
+            "end_s": 83.9,
+            "speaker": "Priya"
+          },
+          {
+            "text": "most",
+            "start_s": 83.9,
+            "end_s": 84.8,
+            "speaker": "Priya"
+          },
+          {
+            "text": "teams",
+            "start_s": 84.8,
+            "end_s": 85.7,
+            "speaker": "Priya"
+          },
+          {
+            "text": "see",
+            "start_s": 85.7,
+            "end_s": 86.6,
+            "speaker": "Priya"
+          },
+          {
+            "text": "the",
+            "start_s": 86.6,
+            "end_s": 87.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "difference",
+            "start_s": 87.5,
+            "end_s": 88.4,
+            "speaker": "Priya"
+          },
+          {
+            "text": "in",
+            "start_s": 88.4,
+            "end_s": 89.3,
+            "speaker": "Priya"
+          },
+          {
+            "text": "the",
+            "start_s": 89.3,
+            "end_s": 90.2,
+            "speaker": "Priya"
+          },
+          {
+            "text": "first",
+            "start_s": 90.2,
+            "end_s": 91.1,
+            "speaker": "Priya"
+          },
+          {
+            "text": "month.",
+            "start_s": 91.1,
+            "end_s": 92.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T008",
+        "start_s": 92.0,
+        "end_s": 102.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "I'm not sure we have budget this quarter.",
+        "words": [
+          {
+            "text": "I'm",
+            "start_s": 92.0,
+            "end_s": 93.25,
+            "speaker": "Sam"
+          },
+          {
+            "text": "not",
+            "start_s": 93.25,
+            "end_s": 94.5,
+            "speaker": "Sam"
+          },
+          {
+            "text": "sure",
+            "start_s": 94.5,
+            "end_s": 95.75,
+            "speaker": "Sam"
+          },
+          {
+            "text": "we",
+            "start_s": 95.75,
+            "end_s": 97.0,
+            "speaker": "Sam"
+          },
+          {
+            "text": "have",
+            "start_s": 97.0,
+            "end_s": 98.25,
+            "speaker": "Sam"
+          },
+          {
+            "text": "budget",
+            "start_s": 98.25,
+            "end_s": 99.5,
+            "speaker": "Sam"
+          },
+          {
+            "text": "this",
+            "start_s": 99.5,
+            "end_s": 100.75,
+            "speaker": "Sam"
+          },
+          {
+            "text": "quarter.",
+            "start_s": 100.75,
+            "end_s": 102.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T009",
+        "start_s": 102.0,
+        "end_s": 116.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "That's fair. Would it help if I sent a short summary you could share with your manager?",
+        "words": [
+          {
+            "text": "That's",
+            "start_s": 102.0,
+            "end_s": 102.82,
+            "speaker": "Priya"
+          },
+          {
+            "text": "fair.",
+            "start_s": 102.82,
+            "end_s": 103.65,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Would",
+            "start_s": 103.65,
+            "end_s": 104.47,
+            "speaker": "Priya"
+          },
+          {
+            "text": "it",
+            "start_s": 104.47,
+            "end_s": 105.29,
+            "speaker": "Priya"
+          },
+          {
+            "text": "help",
+            "start_s": 105.29,
+            "end_s": 106.12,
+            "speaker": "Priya"
+          },
+          {
+            "text": "if",
+            "start_s": 106.12,
+            "end_s": 106.94,
+            "speaker": "Priya"
+          },
+          {
+            "text": "I",
+            "start_s": 106.94,
+            "end_s": 107.76,
+            "speaker": "Priya"
+          },
+          {
+            "text": "sent",
+            "start_s": 107.76,
+            "end_s": 108.59,
+            "speaker": "Priya"
+          },
+          {
+            "text": "a",
+            "start_s": 108.59,
+            "end_s": 109.41,
+            "speaker": "Priya"
+          },
+          {
+            "text": "short",
+            "start_s": 109.41,
+            "end_s": 110.24,
+            "speaker": "Priya"
+          },
+          {
+            "text": "summary",
+            "start_s": 110.24,
+            "end_s": 111.06,
+            "speaker": "Priya"
+          },
+          {
+            "text": "you",
+            "start_s": 111.06,
+            "end_s": 111.88,
+            "speaker": "Priya"
+          },
+          {
+            "text": "could",
+            "start_s": 111.88,
+            "end_s": 112.71,
+            "speaker": "Priya"
+          },
+          {
+            "text": "share",
+            "start_s": 112.71,
+            "end_s": 113.53,
+            "speaker": "Priya"
+          },
+          {
+            "text": "with",
+            "start_s": 113.53,
+            "end_s": 114.35,
+            "speaker": "Priya"
+          },
+          {
+            "text": "your",
+            "start_s": 114.35,
+            "end_s": 115.18,
+            "speaker": "Priya"
+          },
+          {
+            "text": "manager?",
+            "start_s": 115.18,
+            "end_s": 116.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T010",
+        "start_s": 116.0,
+        "end_s": 128.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "Maybe. Send me something I can share with my manager.",
+        "words": [
+          {
+            "text": "Maybe.",
+            "start_s": 116.0,
+            "end_s": 117.2,
+            "speaker": "Sam"
+          },
+          {
+            "text": "Send",
+            "start_s": 117.2,
+            "end_s": 118.4,
+            "speaker": "Sam"
+          },
+          {
+            "text": "me",
+            "start_s": 118.4,
+            "end_s": 119.6,
+            "speaker": "Sam"
+          },
+          {
+            "text": "something",
+            "start_s": 119.6,
+            "end_s": 120.8,
+            "speaker": "Sam"
+          },
+          {
+            "text": "I",
+            "start_s": 120.8,
+            "end_s": 122.0,
+            "speaker": "Sam"
+          },
+          {
+            "text": "can",
+            "start_s": 122.0,
+            "end_s": 123.2,
+            "speaker": "Sam"
+          },
+          {
+            "text": "share",
+            "start_s": 123.2,
+            "end_s": 124.4,
+            "speaker": "Sam"
+          },
+          {
+            "text": "with",
+            "start_s": 124.4,
+            "end_s": 125.6,
+            "speaker": "Sam"
+          },
+          {
+            "text": "my",
+            "start_s": 125.6,
+            "end_s": 126.8,
+            "speaker": "Sam"
+          },
+          {
+            "text": "manager.",
+            "start_s": 126.8,
+            "end_s": 128.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T011",
+        "start_s": 128.0,
+        "end_s": 150.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "Absolutely. I'll send a one-page summary today. Can we book 20 minutes on Thursday to walk through it together?",
+        "words": [
+          {
+            "text": "Absolutely.",
+            "start_s": 128.0,
+            "end_s": 129.16,
+            "speaker": "Priya"
+          },
+          {
+            "text": "I'll",
+            "start_s": 129.16,
+            "end_s": 130.32,
+            "speaker": "Priya"
+          },
+          {
+            "text": "send",
+            "start_s": 130.32,
+            "end_s": 131.47,
+            "speaker": "Priya"
+          },
+          {
+            "text": "a",
+            "start_s": 131.47,
+            "end_s": 132.63,
+            "speaker": "Priya"
+          },
+          {
+            "text": "one-page",
+            "start_s": 132.63,
+            "end_s": 133.79,
+            "speaker": "Priya"
+          },
+          {
+            "text": "summary",
+            "start_s": 133.79,
+            "end_s": 134.95,
+            "speaker": "Priya"
+          },
+          {
+            "text": "today.",
+            "start_s": 134.95,
+            "end_s": 136.11,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Can",
+            "start_s": 136.11,
+            "end_s": 137.26,
+            "speaker": "Priya"
+          },
+          {
+            "text": "we",
+            "start_s": 137.26,
+            "end_s": 138.42,
+            "speaker": "Priya"
+          },
+          {
+            "text": "book",
+            "start_s": 138.42,
+            "end_s": 139.58,
+            "speaker": "Priya"
+          },
+          {
+            "text": "20",
+            "start_s": 139.58,
+            "end_s": 140.74,
+            "speaker": "Priya"
+          },
+          {
+            "text": "minutes",
+            "start_s": 140.74,
+            "end_s": 141.89,
+            "speaker": "Priya"
+          },
+          {
+            "text": "on",
+            "start_s": 141.89,
+            "end_s": 143.05,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Thursday",
+            "start_s": 143.05,
+            "end_s": 144.21,
+            "speaker": "Priya"
+          },
+          {
+            "text": "to",
+            "start_s": 144.21,
+            "end_s": 145.37,
+            "speaker": "Priya"
+          },
+          {
+            "text": "walk",
+            "start_s": 145.37,
+            "end_s": 146.53,
+            "speaker": "Priya"
+          },
+          {
+            "text": "through",
+            "start_s": 146.53,
+            "end_s": 147.68,
+            "speaker": "Priya"
+          },
+          {
+            "text": "it",
+            "start_s": 147.68,
+            "end_s": 148.84,
+            "speaker": "Priya"
+          },
+          {
+            "text": "together?",
+            "start_s": 148.84,
+            "end_s": 150.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T012",
+        "start_s": 150.0,
+        "end_s": 166.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "I can do Thursday at 10.",
+        "words": [
+          {
+            "text": "I",
+            "start_s": 150.0,
+            "end_s": 152.67,
+            "speaker": "Sam"
+          },
+          {
+            "text": "can",
+            "start_s": 152.67,
+            "end_s": 155.33,
+            "speaker": "Sam"
+          },
+          {
+            "text": "do",
+            "start_s": 155.33,
+            "end_s": 158.0,
+            "speaker": "Sam"
+          },
+          {
+            "text": "Thursday",
+            "start_s": 158.0,
+            "end_s": 160.67,
+            "speaker": "Sam"
+          },
+          {
+            "text": "at",
+            "start_s": 160.67,
+            "end_s": 163.33,
+            "speaker": "Sam"
+          },
+          {
+            "text": "10.",
+            "start_s": 163.33,
+            "end_s": 166.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T013",
+        "start_s": 166.0,
+        "end_s": 184.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "Perfect. I'll send an invite and the summary this afternoon. Thanks, Sam.",
+        "words": [
+          {
+            "text": "Perfect.",
+            "start_s": 166.0,
+            "end_s": 167.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "I'll",
+            "start_s": 167.5,
+            "end_s": 169.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "send",
+            "start_s": 169.0,
+            "end_s": 170.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "an",
+            "start_s": 170.5,
+            "end_s": 172.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "invite",
+            "start_s": 172.0,
+            "end_s": 173.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "and",
+            "start_s": 173.5,
+            "end_s": 175.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "the",
+            "start_s": 175.0,
+            "end_s": 176.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "summary",
+            "start_s": 176.5,
+            "end_s": 178.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "this",
+            "start_s": 178.0,
+            "end_s": 179.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "afternoon.",
+            "start_s": 179.5,
+            "end_s": 181.0,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Thanks,",
+            "start_s": 181.0,
+            "end_s": 182.5,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Sam.",
+            "start_s": 182.5,
+            "end_s": 184.0,
+            "speaker": "Priya"
+          }
+        ]
+      },
+      {
+        "id": "T014",
+        "start_s": 184.0,
+        "end_s": 206.0,
+        "speaker": "Sam",
+        "role": "customer",
+        "text": "Actually, before we finish, what does implementation involve? I need to know what my team is signing up for.",
+        "words": [
+          {
+            "text": "Actually,",
+            "start_s": 184.0,
+            "end_s": 185.16,
+            "speaker": "Sam"
+          },
+          {
+            "text": "before",
+            "start_s": 185.16,
+            "end_s": 186.32,
+            "speaker": "Sam"
+          },
+          {
+            "text": "we",
+            "start_s": 186.32,
+            "end_s": 187.47,
+            "speaker": "Sam"
+          },
+          {
+            "text": "finish,",
+            "start_s": 187.47,
+            "end_s": 188.63,
+            "speaker": "Sam"
+          },
+          {
+            "text": "what",
+            "start_s": 188.63,
+            "end_s": 189.79,
+            "speaker": "Sam"
+          },
+          {
+            "text": "does",
+            "start_s": 189.79,
+            "end_s": 190.95,
+            "speaker": "Sam"
+          },
+          {
+            "text": "implementation",
+            "start_s": 190.95,
+            "end_s": 192.11,
+            "speaker": "Sam"
+          },
+          {
+            "text": "involve?",
+            "start_s": 192.11,
+            "end_s": 193.26,
+            "speaker": "Sam"
+          },
+          {
+            "text": "I",
+            "start_s": 193.26,
+            "end_s": 194.42,
+            "speaker": "Sam"
+          },
+          {
+            "text": "need",
+            "start_s": 194.42,
+            "end_s": 195.58,
+            "speaker": "Sam"
+          },
+          {
+            "text": "to",
+            "start_s": 195.58,
+            "end_s": 196.74,
+            "speaker": "Sam"
+          },
+          {
+            "text": "know",
+            "start_s": 196.74,
+            "end_s": 197.89,
+            "speaker": "Sam"
+          },
+          {
+            "text": "what",
+            "start_s": 197.89,
+            "end_s": 199.05,
+            "speaker": "Sam"
+          },
+          {
+            "text": "my",
+            "start_s": 199.05,
+            "end_s": 200.21,
+            "speaker": "Sam"
+          },
+          {
+            "text": "team",
+            "start_s": 200.21,
+            "end_s": 201.37,
+            "speaker": "Sam"
+          },
+          {
+            "text": "is",
+            "start_s": 201.37,
+            "end_s": 202.53,
+            "speaker": "Sam"
+          },
+          {
+            "text": "signing",
+            "start_s": 202.53,
+            "end_s": 203.68,
+            "speaker": "Sam"
+          },
+          {
+            "text": "up",
+            "start_s": 203.68,
+            "end_s": 204.84,
+            "speaker": "Sam"
+          },
+          {
+            "text": "for.",
+            "start_s": 204.84,
+            "end_s": 206.0,
+            "speaker": "Sam"
+          }
+        ]
+      },
+      {
+        "id": "T015",
+        "start_s": 206.0,
+        "end_s": 222.0,
+        "speaker": "Priya",
+        "role": "agent",
+        "text": "Good question. It usually takes a couple of weeks, depending on how we connect to your systems. I can cover that on Thursday.",
+        "words": [
+          {
+            "text": "Good",
+            "start_s": 206.0,
+            "end_s": 206.7,
+            "speaker": "Priya"
+          },
+          {
+            "text": "question.",
+            "start_s": 206.7,
+            "end_s": 207.39,
+            "speaker": "Priya"
+          },
+          {
+            "text": "It",
+            "start_s": 207.39,
+            "end_s": 208.09,
+            "speaker": "Priya"
+          },
+          {
+            "text": "usually",
+            "start_s": 208.09,
+            "end_s": 208.78,
+            "speaker": "Priya"
+          },
+          {
+            "text": "takes",
+            "start_s": 208.78,
+            "end_s": 209.48,
+            "speaker": "Priya"
+          },
+          {
+            "text": "a",
+            "start_s": 209.48,
+            "end_s": 210.17,
+            "speaker": "Priya"
+          },
+          {
+            "text": "couple",
+            "start_s": 210.17,
+            "end_s": 210.87,
+            "speaker": "Priya"
+          },
+          {
+            "text": "of",
+            "start_s": 210.87,
+            "end_s": 211.57,
+            "speaker": "Priya"
+          },
+          {
+            "text": "weeks,",
+            "start_s": 211.57,
+            "end_s": 212.26,
+            "speaker": "Priya"
+          },
+          {
+            "text": "depending",
+            "start_s": 212.26,
+            "end_s": 212.96,
+            "speaker": "Priya"
+          },
+          {
+            "text": "on",
+            "start_s": 212.96,
+            "end_s": 213.65,
+            "speaker": "Priya"
+          },
+          {
+            "text": "how",
+            "start_s": 213.65,
+            "end_s": 214.35,
+            "speaker": "Priya"
+          },
+          {
+            "text": "we",
+            "start_s": 214.35,
+            "end_s": 215.04,
+            "speaker": "Priya"
+          },
+          {
+            "text": "connect",
+            "start_s": 215.04,
+            "end_s": 215.74,
+            "speaker": "Priya"
+          },
+          {
+            "text": "to",
+            "start_s": 215.74,
+            "end_s": 216.43,
+            "speaker": "Priya"
+          },
+          {
+            "text": "your",
+            "start_s": 216.43,
+            "end_s": 217.13,
+            "speaker": "Priya"
+          },
+          {
+            "text": "systems.",
+            "start_s": 217.13,
+            "end_s": 217.83,
+            "speaker": "Priya"
+          },
+          {
+            "text": "I",
+            "start_s": 217.83,
+            "end_s": 218.52,
+            "speaker": "Priya"
+          },
+          {
+            "text": "can",
+            "start_s": 218.52,
+            "end_s": 219.22,
+            "speaker": "Priya"
+          },
+          {
+            "text": "cover",
+            "start_s": 219.22,
+            "end_s": 219.91,
+            "speaker": "Priya"
+          },
+          {
+            "text": "that",
+            "start_s": 219.91,
+            "end_s": 220.61,
+            "speaker": "Priya"
+          },
+          {
+            "text": "on",
+            "start_s": 220.61,
+            "end_s": 221.3,
+            "speaker": "Priya"
+          },
+          {
+            "text": "Thursday.",
+            "start_s": 221.3,
+            "end_s": 222.0,
+            "speaker": "Priya"
+          }
+        ]
+      }
+    ]
+  },
+  "scorecard": {
+    "overall_score": 68.0,
+    "category_scores": {
+      "opening": 86.0,
+      "discovery": 62.0,
+      "objection_handling": 68.0,
+      "compliance": 74.0,
+      "closing": 50.0
+    },
+    "critical_failures": [
+      "compliance_claims"
+    ]
+  },
+  "audio_metrics": {
+    "duration_s": 222.0,
+    "timing_resolution": "segment_interpolated",
+    "agent_talk_ratio": 0.62,
+    "customer_talk_ratio": 0.38,
+    "agent_customer_talk_ratio": 1.63,
+    "silence_ratio": 0.08,
+    "overlap_ratio": null,
+    "agent_words_per_minute": 148.0,
+    "customer_words_per_minute": 132.0,
+    "filler_count": 9,
+    "filler_rate_agent": 0.04,
+    "filler_rate_customer": 0.01,
+    "longest_monologue_s": 22.0,
+    "longest_monologue_start_s": 14.0,
+    "longest_monologue_end_s": 36.0,
+    "longest_monologue_turn_ids": [
+      "T003"
+    ],
+    "response_delay_median_s": 0.8,
+    "response_delay_p90_s": 1.6,
+    "interruptions_unavailable_reason": "Transcript segments are sequential; overlapping speech is not measurable in v1.",
+    "timeline_flags": [
+      {
+        "kind": "long_monologue",
+        "start_s": 14.0,
+        "end_s": 36.0,
+        "speaker": "Priya",
+        "detail": "Priya spoke for 22 seconds without asking a question."
+      },
+      {
+        "kind": "slow_response",
+        "start_s": 102.0,
+        "end_s": 106.0,
+        "speaker": "Sam",
+        "detail": "Sam paused for four seconds before answering."
+      },
+      {
+        "kind": "dead_air",
+        "start_s": 116.0,
+        "end_s": 121.0,
+        "speaker": null,
+        "detail": "Five seconds of silence after Sam asked for something to share."
+      },
+      {
+        "kind": "filler_cluster",
+        "start_s": 166.0,
+        "end_s": 174.0,
+        "speaker": "Priya",
+        "detail": "Several filler words in a short stretch while closing."
+      }
+    ]
+  },
+  "rubric_results": [
+    {
+      "id": "rubric-opening-permission",
+      "rubric_item_id": "opening_permission",
+      "category": "opening",
+      "evidence": {
+        "turn_id": "T001",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "Is now still a good time for a quick call?",
+        "start_s": 0.0,
+        "end_s": 8.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.94,
+      "confidence": "high",
+      "status": "met",
+      "rationale": "Priya asked whether it was still a good time before continuing."
+    },
+    {
+      "id": "rubric-opening-context",
+      "rubric_item_id": "opening_context",
+      "category": "opening",
+      "evidence": {
+        "turn_id": "T003",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "I wanted to understand how your team handles that today.",
+        "start_s": 14.0,
+        "end_s": 36.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.86,
+      "confidence": "high",
+      "status": "met",
+      "rationale": "The opening named the team and the problem she wanted to understand."
+    },
+    {
+      "id": "rubric-discovery-current",
+      "rubric_item_id": "discovery_current_state",
+      "category": "discovery",
+      "evidence": {
+        "turn_id": "T004",
+        "speaker": "Sam",
+        "role": "customer",
+        "quote": "We use a spreadsheet and a lot of manual checks.",
+        "start_s": 36.0,
+        "end_s": 46.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.91,
+      "confidence": "high",
+      "status": "met",
+      "rationale": "Sam described the spreadsheet process and the manual checks."
+    },
+    {
+      "id": "rubric-discovery-impact",
+      "rubric_item_id": "discovery_impact",
+      "category": "discovery",
+      "evidence": {
+        "turn_id": "T006",
+        "speaker": "Sam",
+        "role": "customer",
+        "quote": "Probably five hours a week, maybe more when orders pile up.",
+        "start_s": 62.0,
+        "end_s": 74.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.84,
+      "confidence": "high",
+      "status": "partial",
+      "rationale": "Priya found the time cost but did not connect it to a business result."
+    },
+    {
+      "id": "rubric-objection-acknowledge",
+      "rubric_item_id": "objection_acknowledge",
+      "category": "objection_handling",
+      "evidence": {
+        "turn_id": "T009",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "That's fair.",
+        "start_s": 102.0,
+        "end_s": 116.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.88,
+      "confidence": "high",
+      "status": "met",
+      "rationale": "Priya acknowledged the budget concern before responding."
+    },
+    {
+      "id": "rubric-objection-answer",
+      "rubric_item_id": "objection_answer",
+      "category": "objection_handling",
+      "evidence": {
+        "turn_id": "T009",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "Would it help if I sent a short summary you could share with your manager?",
+        "start_s": 102.0,
+        "end_s": 116.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.79,
+      "confidence": "medium",
+      "status": "partial",
+      "rationale": "She offered a summary but did not explore what would unlock budget."
+    },
+    {
+      "id": "rubric-compliance-consent",
+      "rubric_item_id": "compliance_consent",
+      "category": "compliance",
+      "evidence": {
+        "turn_id": "T002",
+        "speaker": "Sam",
+        "role": "customer",
+        "quote": "Sure, I have a couple of minutes before my next meeting.",
+        "start_s": 8.0,
+        "end_s": 14.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.92,
+      "confidence": "high",
+      "status": "met",
+      "rationale": "Sam confirmed he had time to continue."
+    },
+    {
+      "id": "rubric-compliance-claims",
+      "rubric_item_id": "compliance_claims",
+      "category": "compliance",
+      "evidence": {
+        "turn_id": "T007",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "We can definitely cut that in half, and most teams see the difference in the first month.",
+        "start_s": 74.0,
+        "end_s": 92.0,
+        "match_score": 96.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.83,
+      "confidence": "medium",
+      "status": "missed",
+      "rationale": "Priya promised a specific result without evidence or qualification."
+    },
+    {
+      "id": "rubric-closing-next-step",
+      "rubric_item_id": "closing_next_step",
+      "category": "closing",
+      "evidence": {
+        "turn_id": "T011",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "Can we book 20 minutes on Thursday to walk through it together?",
+        "start_s": 128.0,
+        "end_s": 150.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.9,
+      "confidence": "high",
+      "status": "met",
+      "rationale": "The call ended with a specific day and time for the next conversation."
+    },
+    {
+      "id": "rubric-closing-confirm",
+      "rubric_item_id": "closing_confirm",
+      "category": "closing",
+      "evidence": {
+        "turn_id": "T013",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "I'll send an invite and the summary this afternoon.",
+        "start_s": 166.0,
+        "end_s": 184.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.75,
+      "confidence": "medium",
+      "status": "partial",
+      "rationale": "Priya described the follow-up but did not check for remaining questions."
+    }
+  ],
+  "missed_moments": [
+    {
+      "id": "moment-discovery-impact",
+      "rubric_item_id": "discovery_impact",
+      "category": "discovery",
+      "evidence": {
+        "turn_id": "T006",
+        "speaker": "Sam",
+        "role": "customer",
+        "quote": "Probably five hours a week, maybe more when orders pile up.",
+        "start_s": 62.0,
+        "end_s": 74.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.86,
+      "confidence": "high",
+      "what_happened": "Sam named the time cost, and Priya moved straight into a product claim instead of asking what that time was worth.",
+      "severity": "high",
+      "why_it_hurt": "Without a business cost, the budget conversation had nothing concrete to justify.",
+      "better_alternative": "What does five hours a week cost you in missed orders or overtime?",
+      "playbook_refs": [
+        {
+          "passage_id": "pb-discovery-impact-01",
+          "book_title": "The Sales Acceleration Formula",
+          "chapter": "Discovery that earns the next call",
+          "page_start": 84,
+          "page_end": 86,
+          "excerpt": "Ask what the problem costs before you describe what your product does. The cost is what makes the next conversation urgent."
+        }
+      ],
+      "grounded": true
+    },
+    {
+      "id": "moment-objection-budget",
+      "rubric_item_id": "objection_answer",
+      "category": "objection_handling",
+      "evidence": {
+        "turn_id": "T008",
+        "speaker": "Sam",
+        "role": "customer",
+        "quote": "I'm not sure we have budget this quarter.",
+        "start_s": 92.0,
+        "end_s": 102.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.74,
+      "confidence": "medium",
+      "what_happened": "Sam raised budget, and Priya offered a summary without asking what would make budget available.",
+      "severity": "high",
+      "why_it_hurt": "The summary may help, but the real blocker was left unexplored.",
+      "better_alternative": "That's a fair concern. What would need to be true for budget to open up this quarter?",
+      "playbook_refs": [],
+      "grounded": false
+    },
+    {
+      "id": "moment-compliance-claim",
+      "rubric_item_id": "compliance_claims",
+      "category": "compliance",
+      "evidence": {
+        "turn_id": "T007",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "We can definitely cut that in half, and most teams see the difference in the first month.",
+        "start_s": 74.0,
+        "end_s": 92.0,
+        "match_score": 96.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.89,
+      "confidence": "high",
+      "what_happened": "Priya said the team could definitely cut the backlog in half and see results in the first month.",
+      "severity": "critical",
+      "why_it_hurt": "A guaranteed result is hard to support and can damage trust if it does not happen.",
+      "better_alternative": "Teams often find the manual checks take less time once orders are visible in one place. I can show you how that worked for a similar team.",
+      "playbook_refs": [],
+      "grounded": false
+    },
+    {
+      "id": "moment-closing-confirm",
+      "rubric_item_id": "closing_confirm",
+      "category": "closing",
+      "evidence": {
+        "turn_id": "T013",
+        "speaker": "Priya",
+        "role": "agent",
+        "quote": "I'll send an invite and the summary this afternoon.",
+        "start_s": 166.0,
+        "end_s": 184.0,
+        "match_score": 100.0,
+        "attempt": 0
+      },
+      "model_confidence": 0.68,
+      "confidence": "low",
+      "what_happened": "Priya ended the call after describing the follow-up, without checking whether Sam had other questions.",
+      "severity": "low",
+      "why_it_hurt": "Sam's implementation question surfaced at the very end, after the next step had already been set.",
+      "better_alternative": "Before we finish, is there anything about implementation or the team's involvement you want me to cover on Thursday?",
+      "playbook_refs": [],
+      "grounded": false
+    }
+  ],
+  "customer_signals": {
+    "sentiment_arc": [
+      {
+        "turn_id": "T002",
+        "quote": "Sure, I have a couple of minutes before my next meeting.",
+        "sentiment": "neutral"
+      },
+      {
+        "turn_id": "T004",
+        "quote": "It's getting messy as we grow.",
+        "sentiment": "negative"
+      },
+      {
+        "turn_id": "T010",
+        "quote": "Send me something I can share with my manager.",
+        "sentiment": "positive"
+      },
+      {
+        "turn_id": "T014",
+        "quote": "I need to know what my team is signing up for.",
+        "sentiment": "mixed"
+      }
+    ],
+    "objections": [
+      {
+        "text": "Budget is tight this quarter.",
+        "raised_evidence": {
+          "turn_id": "T008",
+          "speaker": "Sam",
+          "role": "customer",
+          "quote": "I'm not sure we have budget this quarter.",
+          "start_s": 92.0,
+          "end_s": 102.0,
+          "match_score": 100.0,
+          "attempt": 0
+        },
+        "resolved": false,
+        "resolution_evidence": null
+      }
+    ],
+    "unanswered_questions": [],
+    "buying_signals": [
+      {
+        "turn_id": "T010",
+        "speaker": "Sam",
+        "role": "customer",
+        "quote": "Send me something I can share with my manager.",
+        "start_s": 116.0,
+        "end_s": 128.0,
+        "match_score": 100.0,
+        "attempt": 0
+      }
+    ],
+    "commitments": [
+      {
+        "party": "You",
+        "what": "Send the one-page summary and a Thursday invite.",
+        "due": "This afternoon",
+        "evidence": {
+          "turn_id": "T013",
+          "speaker": "Priya",
+          "role": "agent",
+          "quote": "I'll send an invite and the summary this afternoon.",
+          "start_s": 166.0,
+          "end_s": 184.0,
+          "match_score": 100.0,
+          "attempt": 0
+        }
+      },
+      {
+        "party": "Customer",
+        "what": "Share the summary with the manager before Thursday.",
+        "due": "Before Thursday at 10",
+        "evidence": {
+          "turn_id": "T010",
+          "speaker": "Sam",
+          "role": "customer",
+          "quote": "Send me something I can share with my manager.",
+          "start_s": 116.0,
+          "end_s": 128.0,
+          "match_score": 100.0,
+          "attempt": 0
+        }
+      }
+    ],
+    "outcome": "advanced"
+  },
+  "next_steps": {
+    "follow_up_message": "Hi [Name], thanks for the conversation today. As promised, here is the one-page summary you can share with [Manager]. The Thursday 10am slot is still open if that works. Best, Priya",
+    "recommended_actions": [
+      "Send the one-page summary this afternoon.",
+      "Confirm Thursday at 10 in the calendar invite.",
+      "Ask what the five hours a week costs the team before the next demo."
+    ]
+  },
+  "coaching": {
+    "top_fixes": [
+      {
+        "finding_id": "moment-discovery-impact",
+        "explanation": "You found the time cost, then moved to a product claim. A cost question would have made the budget conversation concrete.",
+        "practice_drill": "Write three questions that turn a time cost into a business cost, then use one in your next discovery call."
+      },
+      {
+        "finding_id": "moment-objection-budget",
+        "explanation": "You acknowledged the budget concern, but a summary does not answer it. Ask what would make budget available.",
+        "practice_drill": "Practise one sentence that acknowledges the concern and asks what would need to change."
+      },
+      {
+        "finding_id": "moment-compliance-claim",
+        "explanation": "You promised a specific result. Replace guarantees with a qualified example you can support.",
+        "practice_drill": "Rewrite the claim as an example from a similar team, without a guaranteed number or timeline."
+      }
+    ],
+    "strength": "You asked permission at the start and stayed calm when Sam raised budget."
+  },
+  "unverified_count": 1,
+  "warnings": [
+    "One suggested quote could not be matched to the transcript and was left out of the review."
+  ]
+}

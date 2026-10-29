@@ -14,8 +14,9 @@ const allowed = new Set([
   "http://www.w3.org/XML/1998/namespace",
 ]);
 // React includes its error-decoder link as a static string in the production
-// build. It is never fetched, so it is not a runtime request.
-const allowedPrefixes = ["https://react.dev/errors/"];
+// build, and MSW's worker carries its project link in a comment. Neither is
+// fetched, so neither is a runtime request.
+const allowedPrefixes = ["https://react.dev/errors/", "https://github.com/mswjs/msw"];
 const urlPattern = /https?:\/\/[^\s"'<>`)\\]+/gi;
 
 if (!existsSync(dist)) {
