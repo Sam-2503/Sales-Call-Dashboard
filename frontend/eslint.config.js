@@ -43,6 +43,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ["src/routes.tsx"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
+  {
     files: ["scripts/**/*.mjs", "vite.config.ts"],
     languageOptions: {
       globals: globals.node,

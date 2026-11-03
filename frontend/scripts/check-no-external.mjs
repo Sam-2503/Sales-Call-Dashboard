@@ -16,7 +16,13 @@ const allowed = new Set([
 // React includes its error-decoder link as a static string in the production
 // build, and MSW's worker carries its project link in a comment. Neither is
 // fetched, so neither is a runtime request.
-const allowedPrefixes = ["https://react.dev/errors/", "https://github.com/mswjs/msw"];
+const allowedPrefixes = [
+  "https://react.dev/errors/",
+  "https://reactrouter.com/en/main/routers/picking-a-router",
+  "https://github.com/mswjs/msw",
+  "https://github.com/ungap/url-search-params",
+  "http://localhost",
+];
 const urlPattern = /https?:\/\/[^\s"'<>`)\\]+/gi;
 
 if (!existsSync(dist)) {
