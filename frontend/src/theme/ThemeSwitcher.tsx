@@ -4,9 +4,9 @@ import { cn } from "@/lib/cn";
 import type { ThemePreference } from "./useTheme";
 
 const options: Array<{ value: ThemePreference; label: string }> = [
-  { value: "system", label: copy.preview.themeSystem },
-  { value: "light", label: copy.preview.themeLight },
-  { value: "dark", label: copy.preview.themeDark },
+  { value: "system", label: copy.theme.system },
+  { value: "light", label: copy.theme.light },
+  { value: "dark", label: copy.theme.dark },
 ];
 
 export function ThemeSwitcher({
@@ -19,7 +19,7 @@ export function ThemeSwitcher({
   return (
     <div
       role="group"
-      aria-label={copy.preview.themeLabel}
+      aria-label={copy.theme.label}
       className="flex items-center gap-1 rounded-control border border-hairline bg-surface p-1"
     >
       {options.map((option) => {

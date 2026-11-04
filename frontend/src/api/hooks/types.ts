@@ -6,6 +6,7 @@ export type CallListResponse = components["schemas"]["CallListResponse"];
 export type JobResponse = components["schemas"]["JobResponse"];
 export type Feedback = components["schemas"]["FeedbackResponse"];
 export type WorkspaceInfo = components["schemas"]["WorkspaceInfo"];
+export type WorkspaceResponse = components["schemas"]["WorkspaceResponse"];
 export type Agent = components["schemas"]["AgentResponse"];
 export type Rubric = components["schemas"]["Rubric"];
 
