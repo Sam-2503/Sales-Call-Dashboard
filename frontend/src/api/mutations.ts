@@ -92,3 +92,51 @@ export function useUpdateAgent() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.agents }),
   });
 }
+
+export function useDeleteCall() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (callId: string) =>
+      request<void>(
+        client.DELETE("/api/v1/calls/{call_id}", { params: { path: { call_id: callId } } }),
+      ),
+    onSuccess: (_data, callId) => {
+      void queryClient.invalidateQueries({ queryKey: ["calls"] });
+      queryClient.removeQueries({ queryKey: queryKeys.call(callId) });
+      queryClient.removeQueries({ queryKey: queryKeys.report(callId) });
+    },
+  });
+}
+
+export function useReanalyseCall() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (callId: string) =>
+      request<{ call_id: string; job_id: string; status: string }>(
+        client.POST("/api/v1/calls/{call_id}/reanalyse", {
+          params: { path: { call_id: callId } },
+          body: {},
+        }),
+      ),
+    onSuccess: (_data, callId) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.call(callId) });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.report(callId) });
+    },
+  });
+}
+
+export function useFindingFeedback() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { callId: string; findingId: string; kind: string; verdict: "helpful" | "disagree" }) =>
+      request(
+        client.PUT("/api/v1/calls/{call_id}/feedback/{finding_id}", {
+          params: { path: { call_id: input.callId, finding_id: input.findingId } },
+          body: { finding_id: input.findingId, kind: input.kind, verdict: input.verdict },
+        }),
+      ),
+    onSuccess: (_data, input) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.feedback(input.callId) });
+    },
+  });
+}

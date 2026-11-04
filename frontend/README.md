@@ -3,16 +3,21 @@
 The React frontend for the Sales Call Analyser. It is built as a static bundle
 and served by FastAPI at `/` from the same container as the API.
 
-This checkout contains **Stages 0 and 1**:
+This checkout contains the complete core review workflow:
 
 - Stage 0: Vite/React/TypeScript scaffold, design tokens, base components,
   copy skeleton and build guards.
 - Stage 1: typed API client, access-key storage, TanStack Query resource hooks,
   SSE job progress with polling fallback, generated-type drift checking, and
   MSW handlers for every endpoint in the frontend contract.
+- Calls: upload with consent and server-provided limits, live processing
+  progress, report review, audio timestamps, transcript, feedback, follow-up
+  message copying, re-analysis and deletion.
+- Progress: score history and recurring weak spots with honest unavailable and
+  empty states.
 
-The `/` page is still the temporary design-system preview. Product screens,
-routing, upload, playback and report views arrive in later stages.
+The app is a static build served at `/`; use the calls page to upload a
+synthetic or permitted recording and review its result.
 
 ## Requirements
 
@@ -149,11 +154,10 @@ and 1280 px, plus a dark-mode view at 1280 px:
 - [Light, 1280 px](screenshots/stage0/light-1280.png)
 - [Dark, 1280 px](screenshots/stage0/dark-1280.png)
 
-## Limitations in this stage
+## Limitations
 
-- No routing, welcome/settings screens, upload form, call list, playback or
-  report screens exist yet.
-- The preview is temporary and will be replaced by the route shell in Stage 2.
+- The progress history uses lightweight CSS bars rather than a charting
+  dependency so the initial bundle stays small.
 - The accessibility tests use jsdom. Colour contrast is asserted separately from
   the token values; jsdom does not calculate rendered contrast.
 - Playwright is not a project dependency. The Stage 0 screenshots were captured
