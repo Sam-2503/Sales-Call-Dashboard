@@ -2,6 +2,7 @@ import type { CallReport, components } from "@/api/schema";
 
 export type CallSummary = components["schemas"]["CallSummary"];
 export type CallResponse = components["schemas"]["CallResponse"];
+export type CallUploadResponse = components["schemas"]["CallUploadResponse"];
 export type CallListResponse = components["schemas"]["CallListResponse"];
 export type JobResponse = components["schemas"]["JobResponse"];
 export type Feedback = components["schemas"]["FeedbackResponse"];

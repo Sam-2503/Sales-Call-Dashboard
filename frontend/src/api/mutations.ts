@@ -1,10 +1,37 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { client, request } from "@/api/client";
+import { API_BASE, authHeaders, client, request } from "@/api/client";
+import { ApiError } from "@/api/errors";
 import { clearStoredData, setAccessKey } from "@/api/storage";
 
 import { queryKeys } from "./hooks/keys";
-import type { Agent, WorkspaceResponse } from "./hooks/types";
+import type { Agent, CallUploadResponse, WorkspaceResponse } from "./hooks/types";
+
+export async function uploadCall(input: {
+  file: File;
+  consent: boolean;
+  title?: string;
+  agentId?: string;
+}): Promise<CallUploadResponse> {
+  const body = new FormData();
+  body.append("file", input.file);
+  body.append("consent", String(input.consent));
+  if (input.title?.trim()) body.append("title", input.title.trim());
+  if (input.agentId) body.append("agent_id", input.agentId);
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}/calls`, {
+      method: "POST",
+      headers: authHeaders(),
+      body,
+    });
+  } catch (cause) {
+    throw new Error("Upload could not reach the service.", { cause });
+  }
+  if (!response.ok) throw await ApiError.fromResponse(response);
+  return (await response.json()) as CallUploadResponse;
+}
 
 export function useCreateWorkspace() {
   const queryClient = useQueryClient();
