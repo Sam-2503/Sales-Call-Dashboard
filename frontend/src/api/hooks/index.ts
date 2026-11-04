@@ -120,6 +120,21 @@ export function useReport(callId: string | null | undefined) {
   });
 }
 
+export function useAudioUrl(callId: string | null | undefined) {
+  const accessKey = useAccessKey();
+  return useQuery({
+    queryKey: ["audio-url", callId ?? ""],
+    queryFn: () =>
+      request<{ url: string }>(
+        client.GET("/api/v1/calls/{call_id}/audio-url", {
+          params: { path: { call_id: callId! } },
+        }),
+      ),
+    enabled: Boolean(accessKey && callId),
+    staleTime: 5 * 60_000,
+  });
+}
+
 export function useJob(jobId: string | null | undefined, options: { poll?: boolean } = {}) {
   const accessKey = useAccessKey();
   return useQuery({
