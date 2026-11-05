@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 
-import { useMeta, usePlaybook, useRubric } from "@/api/hooks";
+import { useMeta, useRubric } from "@/api/hooks";
 import { Button, Disclosure, ErrorState, Skeleton } from "@/components";
 import { copy, technicalCopy } from "@/copy";
 
 export function HowItWorksPage() {
   const meta = useMeta();
-  const playbook = usePlaybook();
   const rubric = useRubric();
 
   if (meta.isLoading) {
@@ -34,8 +33,6 @@ export function HowItWorksPage() {
       </div>
     );
   }
-
-  const book = playbook.data?.available ? playbook.data : null;
 
   return (
     <div className="max-w-[65ch]">
@@ -65,13 +62,7 @@ export function HowItWorksPage() {
       <section className="mt-8 border-t border-hairline pt-8">
         <h2>{copy.howItWorks.adviceHeading}</h2>
         <p className="mt-3">{copy.howItWorks.adviceBody}</p>
-        {book?.title ? (
-          <p className="mt-2">
-            {copy.labels.fromBook} <em>{book.title}</em>.
-          </p>
-        ) : (
-          <p className="mt-2 text-muted">{copy.howItWorks.adviceNoBook}</p>
-        )}
+        <p className="mt-2 text-muted">{copy.howItWorks.adviceRubric}</p>
       </section>
 
       <p className="mt-8 border-t border-hairline pt-5 text-sm text-muted">
@@ -93,10 +84,6 @@ export function HowItWorksPage() {
             <dd>{meta.data.models.fast}</dd>
             <dt className="text-muted">{technicalCopy.transcriptionModel}</dt>
             <dd>{meta.data.models.transcribe}</dd>
-            <dt className="text-muted">{technicalCopy.embeddingModel}</dt>
-            <dd>{meta.data.models.embedding}</dd>
-            <dt className="text-muted">{technicalCopy.bookTitle}</dt>
-            <dd>{book?.title ?? technicalCopy.notAvailable}</dd>
           </dl>
         </Disclosure>
       </div>

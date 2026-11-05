@@ -7,11 +7,8 @@ import asyncio
 import os
 import signal
 from contextlib import suppress
-from pathlib import Path
 
 import uvicorn
-from alembic import command
-from alembic.config import Config
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from analyser_api.config import Settings
@@ -20,15 +17,7 @@ from analyser_api.jobs.runner import PackageRunner
 from analyser_api.jobs.worker import JobWorker
 from analyser_api.openapi import OPENAPI_PATH, render_openapi
 from analyser_api.services.demo import seed_demo_workspace
-from analyser_api.services.playbook_artifact import publish, sync
 from analyser_api.storage.factory import create_storage
-
-
-def migrate() -> None:
-    settings = Settings()
-    config = Config(str(Path(__file__).parents[2] / "alembic.ini"))
-    config.set_main_option("sqlalchemy.url", settings.database_url_direct or settings.database_url)
-    command.upgrade(config, "head")
 
 
 def export_openapi(*, check: bool) -> int:
@@ -100,7 +89,6 @@ def serve() -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="analyser-api")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    subparsers.add_parser("migrate", help="Apply database migrations.")
     openapi = subparsers.add_parser(
         "export-openapi", help="Write the deterministic OpenAPI schema."
     )
@@ -111,18 +99,12 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("serve", help="Run the HTTP service.")
     seed = subparsers.add_parser("seed-demo", help="Create or reuse deterministic demo data.")
     seed.add_argument("--calls", type=int, default=8)
-    playbook = subparsers.add_parser("playbook", help="Publish or sync the playbook artifact.")
-    playbook_sub = playbook.add_subparsers(dest="playbook_command", required=True)
-    playbook_sub.add_parser("publish")
-    playbook_sub.add_parser("sync")
     return parser
 
 
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
-    if args.command == "migrate":
-        migrate()
-    elif args.command == "export-openapi":
+    if args.command == "export-openapi":
         raise SystemExit(export_openapi(check=bool(args.check)))
     elif args.command == "worker":
         asyncio.run(run_worker())
@@ -130,12 +112,6 @@ def main(argv: list[str] | None = None) -> None:
         serve()
     elif args.command == "seed-demo":
         asyncio.run(run_seed_demo(args.calls))
-    elif args.command == "playbook":
-        settings = Settings()
-        if args.playbook_command == "publish":
-            print(publish(settings))
-        else:
-            print("updated" if sync(settings) else "up-to-date")
     else:  # pragma: no cover - argparse enforces the choices
         raise SystemExit("unknown command")
 

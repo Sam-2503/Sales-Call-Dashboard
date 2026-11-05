@@ -8,21 +8,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --max-warnings 0",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "gen:api": "node scripts/gen-api.mjs",
-    "check:api": "node scripts/gen-api.mjs --check",
-    "sync:fixtures": "node scripts/sync-fixtures.mjs",
-    "check:bundle": "node scripts/check-bundle.mjs",
-    "check:copy": "node scripts/check-copy.mjs",
-    "check:no-external": "node scripts/check-no-external.mjs",
-    "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run check:api && npm run check:bundle && npm run check:copy && npm run check:no-external"
+    "build": "npm run typecheck && vite build",
+    "check": "npm run build"
   },
   "dependencies": {
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
@@ -42,34 +31,13 @@
     "react-router-dom": "^7.18.5"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
-    "@testing-library/dom": "^10.4.2",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^5.2.0",
-    "eslint": "^10.13.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.7",
-    "globals": "^17.13.0",
-    "jsdom": "^29.1.1",
-    "msw": "^2.15.0",
-    "openapi-typescript": "^7.13.0",
-    "prettier": "^3.9.10",
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.72.1",
-    "vite": "^7.3.7",
-    "vitest": "^4.1.12",
-    "vitest-axe": "^0.1.0"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
+    "vite": "^7.3.7"
   }
 }

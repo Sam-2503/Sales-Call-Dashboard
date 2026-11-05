@@ -194,10 +194,8 @@ export const copy = {
     quotesBody:
       "Every quote shown in a review is checked against the transcript. If we can't confirm it, we leave it out.",
     adviceHeading: "Where the advice comes from",
-    adviceBody:
-      "The advice comes from what happened on the call, plus a book of sales guidance when it is available.",
-    adviceNoBook:
-      "The review uses what happened on the call. Book guidance isn't available right now.",
+    adviceBody: "The advice comes from what happened on the call and the active checklist.",
+    adviceRubric: "Advice is based on the active checklist and what was said.",
     errorTitle: "We couldn't load this page",
     errorBody: "Check your connection and try again.",
   },
@@ -215,6 +213,10 @@ export const copy = {
     uploadHeading: "Add a call",
     uploadBody: "Choose an audio file. The review usually takes a few minutes.",
     file: "Audio file",
+    guidelinesLabel: "Company guidelines (optional YAML)",
+    guidelinesHelp:
+      "Upload a YAML checklist to use your company's sales guidelines for this call. Leave this empty to use the default sales checklist.",
+    selectedGuidelines: (name: string) => `Selected: ${name}`,
     titleLabel: "Call name",
     titlePlaceholder: "Optional name",
     repLabel: "Rep",
@@ -242,6 +244,7 @@ export const copy = {
     strengthHeading: "What worked",
     findingsHeading: "Moments to improve",
     nextStepsHeading: "What to send next",
+    nextStepsUnavailable: "No follow-up message was generated for this review. Re-analyse the call to create one.",
     actionsHeading: "Suggested actions",
     transcriptHeading: "Conversation",
     helpful: "Helpful",
@@ -293,6 +296,7 @@ export const copy = {
     consentRequired: "Tick the permission box before uploading.",
     fileTooLarge: (maxMb?: number) =>
       `That file is larger than ${megabytes(maxMb)}. Choose a smaller file or trim it.`,
+    invalidRubric: "That checklist file is invalid. Upload a valid YAML file.",
     unsupportedMedia:
       "That file type isn't supported. Choose an MP3, WAV, M4A or another common audio file.",
     invalidAudio: "We couldn't read that audio. Try another file or export it again.",
@@ -306,8 +310,6 @@ export const copy = {
     budgetExceeded: "The sample has reached its daily limit. Try again tomorrow.",
     notReady: "This review isn't ready yet. Wait a moment and try again.",
     conflict: "Something changed while you were working. Refresh the page and try again.",
-    playbookUnavailable:
-      "The book guidance isn't available right now. You can still read the rest of the review.",
     serviceUnavailable: "The service is unavailable right now. Try again in a minute.",
     unauthorized:
       "We couldn't open these calls. Enter your access key, or start fresh. Starting fresh leaves the old calls behind.",
@@ -320,8 +322,6 @@ export const copy = {
         "This call couldn't be reviewed because part of it was blocked. Try a different call.",
       analysis_failed: "The review didn't finish. Try again; your call is still saved.",
       worker_lost: "The review stopped unexpectedly. Try again; your call is still saved.",
-      playbook_unavailable:
-        "The book guidance isn't available right now. Try again; your call is still saved.",
       invalid_audio: "We couldn't read that audio. Try another file or export it again.",
       internal_error: "The review didn't finish. Try again; your call is still saved.",
     },
@@ -356,7 +356,6 @@ export const copy = {
     whatWasSaid: "What was said",
     whyItMatters: "Why it matters",
     strongerLine: "A stronger line",
-    fromBook: "From",
     chapter: "Chapter",
     pages: "Pages",
     showPassage: "Show passage",
@@ -426,8 +425,6 @@ export const technicalCopy = {
   heading: "About this review",
   checklistVersion: "Checklist version",
   pipelineVersion: "Review engine version",
-  bookVersion: "Book index",
-  bookTitle: "Book title",
   notAvailable: "Not available",
   stageTimes: "Time by stage",
   models: "Models used",
@@ -435,10 +432,8 @@ export const technicalCopy = {
   analysisModel: "Analysis model",
   fastModel: "Fast model",
   transcriptionModel: "Transcription model",
-  embeddingModel: "Embedding model",
   examplePipelineVersion: "0.1.0",
   exampleChecklistVersion: "sales_v1, 0.1",
-  exampleBookVersion: "Example guide, 2026",
   apiContract: "API contract",
   jsonExport: "JSON export",
   confidenceNote: "Model confidence is shown as Less sure when it is low.",
@@ -451,6 +446,8 @@ export const technicalCopy = {
 const errorCodeCopy: Record<string, (context: ErrorContext) => string> = {
   consent_required: () => copy.errors.consentRequired,
   file_too_large: (context) => copy.errors.fileTooLarge(context.maxMb),
+  rubric_file_too_large: () => copy.errors.fileTooLarge(),
+  invalid_rubric: () => copy.errors.invalidRubric,
   unsupported_media: () => copy.errors.unsupportedMedia,
   invalid_audio: () => copy.errors.invalidAudio,
   audio_too_long: (context) => copy.errors.audioTooLong(context.maxMinutes),
@@ -460,7 +457,6 @@ const errorCodeCopy: Record<string, (context: ErrorContext) => string> = {
   budget_exceeded: () => copy.errors.budgetExceeded,
   not_ready: () => copy.errors.notReady,
   conflict: () => copy.errors.conflict,
-  playbook_unavailable: () => copy.errors.playbookUnavailable,
   service_unavailable: () => copy.errors.serviceUnavailable,
   unauthorized: () => copy.errors.unauthorized,
   internal_error: () => copy.errors.internal,

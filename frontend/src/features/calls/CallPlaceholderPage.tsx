@@ -1,7 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { useAudioUrl, useCall, useFeedback, useReport } from "@/api/hooks";
+import {
+  invalidateCall,
+  invalidateReport,
+  useAudioUrl,
+  useCall,
+  useFeedback,
+  useReport,
+} from "@/api/hooks";
 import { useDeleteCall, useFindingFeedback, useReanalyseCall } from "@/api/mutations";
 import { useJobEvents } from "@/api/sse";
 import { useAccessKey } from "@/api/useAccessKey";
@@ -16,6 +24,7 @@ function statusLabel(status: string): string {
 export function CallPlaceholderPage() {
   const { callId } = useParams();
   const accessKey = useAccessKey();
+  const queryClient = useQueryClient();
   const call = useCall(callId);
   const report = useReport(callId);
   const audio = useAudioUrl(callId);
@@ -24,6 +33,14 @@ export function CallPlaceholderPage() {
   const reanalyse = useReanalyseCall();
   const progress = useJobEvents(call.data?.job?.id, { enabled: Boolean(call.data?.job?.id) });
   const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    if (!callId || (progress.status !== "succeeded" && progress.status !== "failed")) return;
+    void invalidateCall(queryClient, callId);
+    if (progress.status === "succeeded") {
+      void invalidateReport(queryClient, callId);
+    }
+  }, [callId, progress.status, queryClient]);
 
   if (!accessKey) return <Navigate to="/" replace />;
   if (!callId) return <Navigate to="/calls" replace />;
@@ -191,7 +208,7 @@ function Review({
           return <article key={finding.id} className="rounded-card border border-hairline bg-surface p-4"><p className="font-bold">{finding.category.replaceAll("_", " ")}</p><p className="mt-2">{finding.what_happened}</p>{finding.evidence ? <blockquote className="mt-3 border-l-4 border-highlighter pl-3 text-muted">“{finding.evidence.quote}” <button type="button" className="ml-2 font-bold underline" onClick={() => seek(finding.evidence?.start_s ?? 0)}>at {Math.round(finding.evidence.start_s)}s</button></blockquote> : null}{finding.better_alternative ? <p className="mt-3"><strong>{copy.labels.strongerLine}:</strong> {finding.better_alternative}</p> : null}<div className="mt-4 flex gap-2"><button type="button" className="rounded border border-hairline px-3 py-1 text-sm" aria-pressed={current === "helpful"} disabled={feedbackMutation.isPending} onClick={() => feedbackMutation.mutate({ callId, findingId: finding.id, kind: finding.category, verdict: "helpful" })}>{copy.callPage.helpful}</button><button type="button" className="rounded border border-hairline px-3 py-1 text-sm" aria-pressed={current === "disagree"} disabled={feedbackMutation.isPending} onClick={() => feedbackMutation.mutate({ callId, findingId: finding.id, kind: finding.category, verdict: "disagree" })}>{copy.callPage.disagree}</button></div></article>;
         })}</div> : <p className="mt-4 text-muted">{copy.callPage.noFindings}</p>}
       </section>
-      {report.next_steps ? <section aria-labelledby="next-steps-heading"><h2 id="next-steps-heading">{copy.callPage.nextStepsHeading}</h2>{report.next_steps.follow_up_message ? <div className="mt-4 rounded-card border border-hairline bg-surface p-4"><p className="whitespace-pre-wrap">{report.next_steps.follow_up_message}</p><button type="button" className="mt-4 rounded bg-primary px-4 py-2 font-bold text-on-primary" onClick={() => void copyMessage()}>{copied ? copy.callPage.copied : copy.callPage.copyMessage}</button></div> : null}<ul className="mt-4 list-disc space-y-2 pl-5">{report.next_steps.recommended_actions?.map((action) => <li key={action}>{action}</li>)}</ul></section> : null}
+      {report.next_steps ? <section aria-labelledby="next-steps-heading"><h2 id="next-steps-heading">{copy.callPage.nextStepsHeading}</h2>{report.next_steps.follow_up_message ? <div className="mt-4 rounded-card border border-hairline bg-surface p-4"><p className="whitespace-pre-wrap">{report.next_steps.follow_up_message}</p><button type="button" className="mt-4 rounded bg-primary px-4 py-2 font-bold text-on-primary" onClick={() => void copyMessage()}>{copied ? copy.callPage.copied : copy.callPage.copyMessage}</button></div> : <p className="mt-4 text-muted">{copy.callPage.nextStepsUnavailable}</p>}<ul className="mt-4 list-disc space-y-2 pl-5">{report.next_steps.recommended_actions?.map((action) => <li key={action}>{action}</li>)}</ul></section> : null}
       {report.transcript?.turns?.length ? <section aria-labelledby="transcript-heading"><h2 id="transcript-heading">{copy.callPage.transcriptHeading}</h2><div className="mt-4 space-y-3">{report.transcript.turns.map((turn) => <p key={turn.id} className="rounded-card border border-hairline p-3"><strong>{turn.speaker}:</strong> {turn.text} <button type="button" className="ml-2 font-bold underline" onClick={() => seek(turn.start_s)}>{Math.round(turn.start_s)}s</button></p>)}</div></section> : null}
       <section className="flex flex-wrap gap-3 border-t border-hairline pt-6"><button type="button" className="rounded border border-hairline px-4 py-2 font-bold" disabled={busy} onClick={onReanalyse}>{copy.callPage.reanalyse}</button><button type="button" className="rounded border border-status-missed px-4 py-2 font-bold text-status-missed" disabled={busy} onClick={onDelete}>{copy.callPage.delete}</button></section>
     </div>

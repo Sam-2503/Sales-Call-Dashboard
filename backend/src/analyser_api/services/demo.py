@@ -4,8 +4,17 @@ from __future__ import annotations
 
 import random
 from datetime import UTC, datetime, timedelta
+from typing import Literal
 from uuid import UUID, uuid4
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+
+from analyser_api.auth.tokens import issue_token
+from analyser_api.config import Settings
+from analyser_api.db.models import Agent, Call
+from analyser_api.db.models import Workspace as WorkspaceModel
+from analyser_api.services.reports import persist_report
 from call_analyser.rubric import load_rubric
 from call_analyser.schemas.findings import (
     CustomerSignals,
@@ -15,14 +24,6 @@ from call_analyser.schemas.findings import (
 )
 from call_analyser.schemas.report import CallReport, NextSteps, ReportMeta, Scorecard
 from call_analyser.schemas.rubric import Rubric, RubricItem
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-
-from analyser_api.auth.tokens import issue_token
-from analyser_api.config import Settings
-from analyser_api.db.models import Agent, Call
-from analyser_api.db.models import Workspace as WorkspaceModel
-from analyser_api.services.reports import persist_report
 
 
 def _evidence(item: RubricItem) -> Evidence:
@@ -43,15 +44,16 @@ def _report(
     settings: Settings,
     *,
     score: int,
-    outcome: str,
+    outcome: Literal["advanced", "stalled", "lost", "unclear"],
     index: int,
 ) -> CallReport:
-    statuses: dict[str, str] = {}
+    statuses: dict[str, Literal["met", "partial", "missed"]] = {}
     results: list[RubricResult] = []
     missed: list[MissedMoment] = []
     for position, item in enumerate(rubric.items):
         # Deterministically spread misses and partials across calls.
         selector = (score + position + index) % 10
+        status: Literal["met", "partial", "missed"]
         if selector == 0:
             status = "missed"
         elif selector in (1, 2):

@@ -13,6 +13,9 @@ from pathlib import Path
 from typing import Annotated
 from uuid import UUID, uuid4
 
+from call_analyser.errors import RubricError
+from call_analyser.schemas.report import CallReport
+from call_analyser.stages.follow_up import deterministic_next_steps
 from fastapi import (
     APIRouter,
     Depends,
@@ -59,18 +62,24 @@ MEDIA_TYPES = {
 
 
 async def probe_audio(path: Path, timeout_s: float) -> tuple[float, str]:
-    process = await asyncio.create_subprocess_exec(
-        "ffprobe",
-        "-v",
-        "error",
-        "-show_entries",
-        "format=duration,format_name",
-        "-of",
-        "json",
-        str(path),
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
+    try:
+        process = await asyncio.create_subprocess_exec(
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration,format_name",
+            "-of",
+            "json",
+            str(path),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+    except FileNotFoundError as error:
+        raise APIError(
+            "service_unavailable",
+            message="Audio support is not installed. Install ffmpeg, then restart the backend.",
+        ) from error
     try:
         stdout, _ = await asyncio.wait_for(process.communicate(), timeout=timeout_s)
     except TimeoutError as error:
@@ -116,6 +125,7 @@ async def upload_call(
     settings: Annotated[Settings, Depends(get_settings)],
     file: Annotated[UploadFile, File(...)],
     consent: Annotated[bool, Form(...)],
+    rubric_file: Annotated[UploadFile | None, File()] = None,
     title: Annotated[str | None, Form()] = None,
     agent_id: Annotated[UUID | None, Form()] = None,
 ) -> CallUploadResponse:
@@ -140,6 +150,26 @@ async def upload_call(
     key: str | None = None
     try:
         duration, format_name = await probe_audio(path, settings.request_timeout_s)
+        rubric_yaml: str | None = None
+        if rubric_file is not None:
+            rubric_bytes = await rubric_file.read(1_048_577)
+            if len(rubric_bytes) > 1_048_576:
+                raise HTTPException(status_code=413, detail="rubric_file_too_large")
+            try:
+                with tempfile.NamedTemporaryFile(
+                    mode="wb", suffix=".yaml", delete=False
+                ) as rubric_temp:
+                    rubric_temp.write(rubric_bytes)
+                    rubric_path = Path(rubric_temp.name)
+                from call_analyser.rubric import load_rubric
+
+                load_rubric(rubric_path)
+                rubric_yaml = rubric_bytes.decode("utf-8")
+            except (UnicodeDecodeError, ValueError, RubricError) as error:
+                raise HTTPException(status_code=422, detail="invalid_rubric") from error
+            finally:
+                if "rubric_path" in locals():
+                    rubric_path.unlink(missing_ok=True)
         package_settings = settings.package
         if duration > package_settings.max_audio_minutes * 60:
             raise HTTPException(status_code=422, detail="audio_too_long")
@@ -168,7 +198,7 @@ async def upload_call(
             call_id=call_id,
             status="queued",
             max_attempts=settings.job_max_attempts,
-            options={},
+            options={"rubric_yaml": rubric_yaml} if rubric_yaml is not None else {},
             available_at=datetime.now(UTC),
         )
         db.add(job)
@@ -511,6 +541,16 @@ async def get_call_report(call_id: UUID, workspace_id: Workspace, db: Database) 
     if report is None:
         raise HTTPException(status_code=409, detail="not_ready")
     payload = dict(report.report)
+    parsed = CallReport.model_validate(payload)
+    if parsed.status == "ok" and (
+        parsed.next_steps is None or not parsed.next_steps.follow_up_message
+    ):
+        parsed.next_steps = deterministic_next_steps(
+            parsed.customer_signals, parsed.missed_moments
+        )
+        payload = parsed.model_dump(mode="json")
+        report.report = payload
+        await db.commit()
     payload.pop("debug", None)
     return JSONResponse(
         payload,

@@ -15,12 +15,10 @@ import { useAccessKey } from "./useAccessKey";
 const STAGE_TO_STEP: Record<string, number> = {
   ingest: 0,
   transcribe: 0,
-  assign_roles: 1,
   audio_metrics: 1,
   rubric_results: 2,
   missed_moments: 3,
   customer_signals: 3,
-  grounding: 3,
   next_steps: 4,
   coaching: 4,
 };

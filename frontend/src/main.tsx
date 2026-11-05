@@ -12,21 +12,7 @@ import "./theme/base.css";
 
 document.title = copy.appName;
 
-async function enableMocks(): Promise<void> {
-  if (import.meta.env.VITE_USE_MOCKS !== "true") return;
-  const { worker } = await import("./mocks/browser");
-  try {
-    await worker.start({
-      onUnhandledRequest: "bypass",
-      serviceWorker: { url: "/mockServiceWorker.js" },
-    });
-  } catch {
-    // The preview still renders; API calls will fail without the worker.
-  }
-}
-
-async function bootstrap(): Promise<void> {
-  await enableMocks();
+function bootstrap(): void {
   const rootElement = document.getElementById("root");
   if (!rootElement) throw new Error("Root element is missing");
 
@@ -41,4 +27,4 @@ async function bootstrap(): Promise<void> {
   );
 }
 
-void bootstrap();
+bootstrap();

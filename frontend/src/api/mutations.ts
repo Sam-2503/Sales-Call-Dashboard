@@ -10,12 +10,14 @@ import type { Agent, CallUploadResponse, WorkspaceResponse } from "./hooks/types
 export async function uploadCall(input: {
   file: File;
   consent: boolean;
+  rubricFile?: File;
   title?: string;
   agentId?: string;
 }): Promise<CallUploadResponse> {
   const body = new FormData();
   body.append("file", input.file);
   body.append("consent", String(input.consent));
+  if (input.rubricFile) body.append("rubric_file", input.rubricFile);
   if (input.title?.trim()) body.append("title", input.title.trim());
   if (input.agentId) body.append("agent_id", input.agentId);
 

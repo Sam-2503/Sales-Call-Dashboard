@@ -11,9 +11,10 @@ import json
 from pathlib import Path
 from typing import Literal, Self, cast
 
-from call_analyser.config import Settings as PackageSettings
 from pydantic import AliasChoices, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from call_analyser.config import Settings as PackageSettings
 
 
 class Settings(BaseSettings):
@@ -34,11 +35,12 @@ class Settings(BaseSettings):
     request_timeout_s: float = Field(default=30, gt=0)
     cors_origins: list[str] = Field(default_factory=list)
     trusted_proxy_count: int = Field(default=1, ge=0)
-    static_dir: Path | None = None
+    # In local development the backend can serve the Vite build from the
+    # sibling frontend directory.
+    static_dir: Path | None = Path("../frontend/dist")
 
-    # Database.  The pooler DSN is for the app; migrations use the direct DSN.
+    # Database.
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/analyser"
-    database_url_direct: str | None = None
     db_pooler: bool = False
     db_pool_size: int = Field(default=5, ge=1)
     db_max_overflow: int = Field(default=5, ge=0)
@@ -52,7 +54,7 @@ class Settings(BaseSettings):
     upload_rate_limit_per_hour: int = Field(default=30, ge=1)
 
     # Daily quotas and spend control.
-    daily_calls_per_workspace: int = Field(default=5, ge=1)
+    daily_calls_per_workspace: int = Field(default=10, ge=1)
     daily_calls_global: int = Field(default=100, ge=1)
     daily_budget_usd: float = Field(default=1.0, ge=0)
     max_upload_mb: int = Field(default=25, ge=1)
@@ -76,7 +78,10 @@ class Settings(BaseSettings):
     storage_backend: Literal["local", "s3"] = "local"
     storage_dir: Path = Path("data/audio")
     s3_bucket: str | None = None
-    s3_endpoint_url: str | None = None
+    s3_endpoint_url: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("S3_ENDPOINT_URL", "AWS_ENDPOINT_URL"),
+    )
     s3_region: str = Field(
         default="auto", validation_alias=AliasChoices("S3_REGION", "AWS_REGION")
     )
@@ -90,7 +95,6 @@ class Settings(BaseSettings):
         repr=False,
         validation_alias=AliasChoices("S3_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"),
     )
-    playbook_artifact_prefix: str | None = None
 
     # Worker and event delivery.
     worker_enabled: bool = True
@@ -107,8 +111,9 @@ class Settings(BaseSettings):
     sse_keepalive_s: float = Field(default=15, gt=0)
 
     # Analysis integration.  The package remains authoritative for audio limits.
-    rubric_path: Path = Path("../rubrics/sales_v1.yaml")
-    playbook_path: Path | None = None
+    rubric_path: Path = (
+        Path(__file__).resolve().parents[1] / "call_analyser" / "rubric" / "sales_v1.yaml"
+    )
     package: PackageSettings = Field(default_factory=PackageSettings, repr=False)
 
     # Operator surface.

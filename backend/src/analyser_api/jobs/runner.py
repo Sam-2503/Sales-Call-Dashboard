@@ -3,28 +3,28 @@
 from __future__ import annotations
 
 import asyncio
+import tempfile
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal, Protocol
+from typing import Literal, Protocol, cast
 
-from call_analyser.errors import (
-    AudioValidationError,
-    LLMBlockedError,
-    PlaybookIndexMismatchError,
-    PlaybookNotIndexedError,
-    StructuredOutputError,
-    TranscriptionError,
-)
-from call_analyser.pipeline import AnalyseInput, stream_analysis
-from call_analyser.schemas.events import ProgressEvent
-from call_analyser.schemas.report import CallReport, ReportMeta
+from langchain_core.runnables import RunnableConfig
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from analyser_api.config import Settings
 from analyser_api.db.models import Job
 from analyser_api.jobs.events import STAGE_ORDER
 from analyser_api.jobs.stage_store import PostgresStageStore
+from call_analyser.errors import (
+    AudioValidationError,
+    LLMBlockedError,
+    StructuredOutputError,
+    TranscriptionError,
+)
+from call_analyser.pipeline import AnalyseInput, stream_analysis
+from call_analyser.schemas.events import ProgressEvent
+from call_analyser.schemas.report import CallReport, ReportMeta
 
 EventCallback = Callable[[ProgressEvent], Awaitable[None]]
 
@@ -52,14 +52,18 @@ class PackageRunner:
         if self._settings.package.fake_mode:
             return await ScriptedRunner().run(job, audio_path, on_event)
         agent_speaker = job.options.get("agent_speaker")
-        playbook_path = self._settings.playbook_path
-        grounding = bool(playbook_path) and self._settings.package.playbook_grounding == "on"
+        rubric_path = Path(self._settings.rubric_path)
+        rubric_temp: Path | None = None
+        rubric_yaml = job.options.get("rubric_yaml")
+        if isinstance(rubric_yaml, str):
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as file:
+                file.write(rubric_yaml)
+                rubric_temp = Path(file.name)
+            rubric_path = rubric_temp
         input_value = AnalyseInput(
             audio_path=audio_path,
-            rubric_path=Path(self._settings.rubric_path),
-            playbook_path=Path(playbook_path) if playbook_path else None,
+            rubric_path=rubric_path,
             agent_speaker=str(agent_speaker) if agent_speaker else None,
-            grounding=grounding,
         )
         config = {
             "configurable": {
@@ -67,11 +71,15 @@ class PackageRunner:
             }
         }
         report: CallReport | None = None
-        async for item in stream_analysis(input_value, config):
-            if isinstance(item, ProgressEvent):
-                await on_event(item)
-            else:
-                report = item
+        try:
+            async for item in stream_analysis(input_value, cast(RunnableConfig, config)):
+                if isinstance(item, ProgressEvent):
+                    await on_event(item)
+                else:
+                    report = item
+        finally:
+            if rubric_temp is not None:
+                rubric_temp.unlink(missing_ok=True)
         if report is None:
             raise RuntimeError("pipeline finished without a report")
         return report
@@ -133,8 +141,6 @@ def map_exception(exc: BaseException) -> tuple[str, str, bool]:
         return "content_blocked", "The analysis provider blocked the content.", False
     if isinstance(exc, StructuredOutputError):
         return "analysis_failed", "The analysis response could not be validated.", True
-    if isinstance(exc, (PlaybookNotIndexedError, PlaybookIndexMismatchError)):
-        return "playbook_unavailable", "The playbook index is unavailable.", False
     if isinstance(exc, (TimeoutError, ConnectionError, TransientRunnerError)):
         return "analysis_failed", "The analysis service is temporarily unavailable.", True
     return "internal_error", "The analysis failed.", False

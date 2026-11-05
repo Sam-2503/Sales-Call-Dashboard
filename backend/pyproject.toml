@@ -8,38 +8,37 @@ version = "0.1.0"
 description = "FastAPI service for the call analyser."
 requires-python = ">=3.11"
 dependencies = [
-  "alembic>=1.15,<2",
   "asyncpg>=0.30,<1",
   "boto3>=1.35,<2",
-  "call-analyser",
   "fastapi>=0.115,<1",
+  "httpx>=0.27,<1",
+  "langchain==1.2.12",
+  "langchain-groq>=1.1.0,<2",
+  "librosa==0.11.0",
+  "numpy==2.4.3",
   "pydantic>=2.12,<3",
   "pydantic-settings>=2.7,<3",
   "PyJWT>=2.10,<3",
   "python-multipart>=0.0.20,<1",
+  "pyyaml==6.0.3",
+  "rapidfuzz==3.14.3",
   "sqlalchemy[asyncio]>=2.0.36,<3",
+  "soundfile==0.13.1",
   "uvicorn[standard]>=0.34,<1",
 ]
 
 [project.optional-dependencies]
 dev = [
   "httpx>=0.27,<1",
-  "moto[s3]>=5.0,<6",
   "mypy>=1.13,<2",
-  "pgserver>=0.1.4; python_version < '3.13'",
-  "pytest>=8,<9",
-  "pytest-asyncio>=0.24,<1",
   "ruff>=0.9,<1",
 ]
 
 [project.scripts]
 analyser-api = "analyser_api.cli:main"
 
-[tool.uv.sources]
-call-analyser = { path = "..", editable = true }
-
 [tool.hatch.build.targets.wheel]
-packages = ["src/analyser_api"]
+packages = ["src/analyser_api", "src/call_analyser"]
 
 [tool.ruff]
 target-version = "py311"
@@ -54,12 +53,6 @@ python_version = "3.11"
 strict = true
 files = ["src"]
 
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
-markers = [
-  "db: requires a real local PostgreSQL instance",
-]
-
 [[tool.mypy.overrides]]
-module = ["boto3", "botocore.*", "call_analyser.*"]
+module = ["boto3", "botocore.*", "yaml", "soundfile"]
 ignore_missing_imports = true

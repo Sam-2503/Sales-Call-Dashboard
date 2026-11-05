@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery, type QueryClient } from "@tanstack/react-query";
 
-import { client, request } from "@/api/client";
+import { API_ROOT, client, request } from "@/api/client";
 import { useAccessKey } from "@/api/useAccessKey";
 
 import { isActiveCallStatus, queryKeys } from "./keys";
@@ -14,7 +14,6 @@ import type {
   Feedback,
   JobResponse,
   Meta,
-  PlaybookMetadata,
   Rubric,
   TrendsScoresFilters,
   TrendScores,
@@ -124,12 +123,14 @@ export function useAudioUrl(callId: string | null | undefined) {
   const accessKey = useAccessKey();
   return useQuery({
     queryKey: ["audio-url", callId ?? ""],
-    queryFn: () =>
-      request<{ url: string }>(
+    queryFn: async () => {
+      const result = await request<{ url: string }>(
         client.GET("/api/v1/calls/{call_id}/audio-url", {
           params: { path: { call_id: callId! } },
         }),
-      ),
+      );
+      return { ...result, url: new URL(result.url, API_ROOT || window.location.origin).href };
+    },
     enabled: Boolean(accessKey && callId),
     staleTime: 5 * 60_000,
   });
@@ -158,14 +159,6 @@ export function useRubric() {
     queryFn: () => request<Rubric>(client.GET("/api/v1/rubric")),
     staleTime: Infinity,
     gcTime: Infinity,
-  });
-}
-
-export function usePlaybook() {
-  return useQuery({
-    queryKey: queryKeys.playbook,
-    queryFn: () => request<PlaybookMetadata>(client.GET("/api/v1/playbook")),
-    staleTime: LONG_STALE,
   });
 }
 
@@ -252,7 +245,6 @@ export type {
   Feedback,
   JobResponse,
   Meta,
-  PlaybookMetadata,
   Rubric,
   TrendsScoresFilters,
   TrendScores,

@@ -1,7 +1,0 @@
-dist
-coverage
-node_modules
-package-lock.json
-src/api/schema.d.ts
-src/mocks/fixtures/*.json
-public/mockServiceWorker.js

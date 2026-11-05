@@ -19,6 +19,8 @@ MESSAGES: dict[str, str] = {
     "validation_error": "Request validation failed.",
     "consent_required": "Consent is required before uploading a call.",
     "file_too_large": "The uploaded file is too large.",
+    "rubric_file_too_large": "The rubric file is too large.",
+    "invalid_rubric": "The rubric file is invalid. Upload a valid YAML rubric.",
     "unsupported_media": "The uploaded file is not a supported audio format.",
     "invalid_audio": "The uploaded file is not valid audio.",
     "audio_too_long": "The call is longer than the configured maximum.",
@@ -28,7 +30,6 @@ MESSAGES: dict[str, str] = {
     "rate_limited": "Too many requests. Try again later.",
     "not_ready": "The requested resource is not ready.",
     "conflict": "The request conflicts with the current state.",
-    "playbook_unavailable": "The playbook index is unavailable.",
     "service_unavailable": "The service is temporarily unavailable.",
     "internal_error": "An unexpected error occurred.",
 }
@@ -39,6 +40,8 @@ STATUS_BY_CODE: dict[str, int] = {
     "validation_error": 422,
     "consent_required": 400,
     "file_too_large": 413,
+    "rubric_file_too_large": 413,
+    "invalid_rubric": 422,
     "unsupported_media": 415,
     "invalid_audio": 422,
     "audio_too_long": 422,
@@ -48,7 +51,6 @@ STATUS_BY_CODE: dict[str, int] = {
     "rate_limited": 429,
     "not_ready": 409,
     "conflict": 409,
-    "playbook_unavailable": 503,
     "service_unavailable": 503,
     "internal_error": 500,
 }

@@ -312,6 +312,18 @@
             "title": "File",
             "type": "string"
           },
+          "rubric_file": {
+            "anyOf": [
+              {
+                "contentMediaType": "application/octet-stream",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rubric File"
+          },
           "title": {
             "anyOf": [
               {
@@ -1397,11 +1409,6 @@
               }
             ]
           },
-          "grounded": {
-            "default": false,
-            "title": "Grounded",
-            "type": "boolean"
-          },
           "id": {
             "minLength": 1,
             "title": "Id",
@@ -1412,13 +1419,6 @@
             "minimum": 0.0,
             "title": "Model Confidence",
             "type": "number"
-          },
-          "playbook_refs": {
-            "items": {
-              "$ref": "#/components/schemas/PlaybookRef"
-            },
-            "title": "Playbook Refs",
-            "type": "array"
           },
           "rubric_item_id": {
             "minLength": 1,
@@ -1520,50 +1520,6 @@
         "title": "Objection",
         "type": "object"
       },
-      "PlaybookRef": {
-        "properties": {
-          "book_title": {
-            "minLength": 1,
-            "title": "Book Title",
-            "type": "string"
-          },
-          "chapter": {
-            "minLength": 1,
-            "title": "Chapter",
-            "type": "string"
-          },
-          "excerpt": {
-            "minLength": 1,
-            "title": "Excerpt",
-            "type": "string"
-          },
-          "page_end": {
-            "minimum": 1.0,
-            "title": "Page End",
-            "type": "integer"
-          },
-          "page_start": {
-            "minimum": 1.0,
-            "title": "Page Start",
-            "type": "integer"
-          },
-          "passage_id": {
-            "minLength": 1,
-            "title": "Passage Id",
-            "type": "string"
-          }
-        },
-        "required": [
-          "passage_id",
-          "book_title",
-          "chapter",
-          "page_start",
-          "page_end",
-          "excerpt"
-        ],
-        "title": "PlaybookRef",
-        "type": "object"
-      },
       "ReanalyseRequest": {
         "properties": {
           "agent_speaker": {
@@ -1617,18 +1573,6 @@
             "minLength": 1,
             "title": "Pipeline Version",
             "type": "string"
-          },
-          "playbook_identity": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Playbook Identity"
           },
           "prompt_ids": {
             "additionalProperties": {
@@ -3940,29 +3884,6 @@
           }
         },
         "summary": "Public Meta",
-        "tags": [
-          "meta"
-        ]
-      }
-    },
-    "/api/v1/playbook": {
-      "get": {
-        "operationId": "getPlaybook",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": true,
-                  "title": "Response Getplaybook",
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Playbook Metadata",
         "tags": [
           "meta"
         ]

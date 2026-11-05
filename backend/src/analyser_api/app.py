@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import asyncio
-import logging
 import secrets
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from call_analyser.playbook import PlaybookIndex, load_playbook_spec
 from call_analyser.rubric import load_rubric
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
@@ -37,7 +34,6 @@ from analyser_api.jobs.worker import JobWorker, ThreadedWorker
 from analyser_api.logging import RequestContextMiddleware, configure_logging
 from analyser_api.routers import admin, agents, calls, feedback, jobs, meta, trends, workspaces
 from analyser_api.services.janitor import Janitor
-from analyser_api.services.playbook_artifact import sync as sync_playbook
 from analyser_api.storage.factory import create_storage
 
 _OPERATION_IDS = {
@@ -59,7 +55,6 @@ _OPERATION_IDS = {
     "weak_spots": "getWeakSpots",
     "benchmarks": "getBenchmarks",
     "active_rubric": "getRubric",
-    "playbook_metadata": "getPlaybook",
     "public_meta": "getMeta",
     "admin_stats": "getAdminStats",
     "feedback_jsonl": "getAdminFeedback",
@@ -78,18 +73,8 @@ def _operation_id(route: APIRoute) -> str:
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     worker = app.state.worker
-    settings = app.state.settings
-    if settings.playbook_artifact_prefix:
-        try:
-            await asyncio.to_thread(sync_playbook, settings)
-            app.state.playbook_ready = True
-        except Exception as exc:
-            app.state.playbook_ready = False
-            logging.getLogger("analyser_api.startup").error(
-                "playbook_sync_failed error_type=%s", type(exc).__name__
-            )
     await app.state.janitor.start()
-    if worker is not None and app.state.playbook_ready:
+    if worker is not None:
         await worker.start()
     try:
         yield
@@ -118,7 +103,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.session_factory = async_sessionmaker(app.state.engine, expire_on_commit=False)
     app.state.storage = create_storage(active)
     app.state.rubric = load_rubric(active.rubric_path)
-    app.state.playbook_ready = True
     app.state.workspace_limiter = RateLimiter(active.workspace_rate_limit_per_hour, 3600)
     app.state.demo_limiter = RateLimiter(active.demo_workspaces_per_ip_per_day, 86400)
     app.state.upload_limiter = RateLimiter(active.upload_rate_limit_per_hour, 3600)
@@ -166,17 +150,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             checks["storage"] = "ok"
         except Exception:
             checks["storage"] = "failed"
-        package = active.package
-        if package.fake_mode or package.playbook_grounding != "on":
-            checks["playbook"] = "skipped"
-        elif active.playbook_path is None or not app.state.playbook_ready:
-            checks["playbook"] = "failed"
-        else:
-            try:
-                PlaybookIndex.open(load_playbook_spec(active.playbook_path), package)
-                checks["playbook"] = "ok"
-            except Exception:
-                checks["playbook"] = "failed"
         ready = all(value != "failed" for value in checks.values())
         return JSONResponse(
             {"status": "ok" if ready else "not_ready", "checks": checks},

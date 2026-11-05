@@ -1,5 +1,5 @@
 /**
- * Generated from backend/openapi.json by `npm run gen:api`.
+ * Generated from backend/openapi.json.
  * Do not edit by hand.
  */
 export interface paths {
@@ -382,23 +382,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/playbook": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Playbook Metadata */
-        get: operations["getPlaybook"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/rubric": {
         parameters: {
             query?: never;
@@ -613,6 +596,8 @@ export interface components {
             consent: boolean;
             /** File */
             file: string;
+            /** Rubric File */
+            rubric_file?: string | null;
             /** Title */
             title?: string | null;
         };
@@ -989,17 +974,10 @@ export interface components {
              */
             confidence: "high" | "medium" | "low";
             evidence?: components["schemas"]["Evidence"] | null;
-            /**
-             * Grounded
-             * @default false
-             */
-            grounded: boolean;
             /** Id */
             id: string;
             /** Model Confidence */
             model_confidence: number;
-            /** Playbook Refs */
-            playbook_refs?: components["schemas"]["PlaybookRef"][];
             /** Rubric Item Id */
             rubric_item_id: string;
             /**
@@ -1028,21 +1006,6 @@ export interface components {
             /** Text */
             text: string;
         };
-        /** PlaybookRef */
-        PlaybookRef: {
-            /** Book Title */
-            book_title: string;
-            /** Chapter */
-            chapter: string;
-            /** Excerpt */
-            excerpt: string;
-            /** Page End */
-            page_end: number;
-            /** Page Start */
-            page_start: number;
-            /** Passage Id */
-            passage_id: string;
-        };
         /** ReanalyseRequest */
         ReanalyseRequest: {
             /** Agent Speaker */
@@ -1060,10 +1023,6 @@ export interface components {
             };
             /** Pipeline Version */
             pipeline_version: string;
-            /** Playbook Identity */
-            playbook_identity?: {
-                [key: string]: unknown;
-            } | null;
             /** Prompt Ids */
             prompt_ids?: {
                 [key: string]: string;
@@ -2231,28 +2190,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    getPlaybook: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
                 };
             };
         };

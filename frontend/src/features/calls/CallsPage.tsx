@@ -22,6 +22,7 @@ export function CallsPage() {
   const agents = useAgents();
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
+  const [rubricFile, setRubricFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [agentId, setAgentId] = useState("");
   const [consent, setConsent] = useState(false);
@@ -36,10 +37,19 @@ export function CallsPage() {
     event.preventDefault();
     if (!file) return setProblem(copy.calls.uploadMissingFile);
     if (!consent) return setProblem(copy.calls.uploadConsent);
+    if (rubricFile && !/\.ya?ml$/i.test(rubricFile.name)) {
+      return setProblem(copy.errors.invalidRubric);
+    }
     setProblem(null);
     setUploading(true);
     try {
-      const created = await uploadCall({ file, consent, title, agentId: agentId || undefined });
+      const created = await uploadCall({
+        file,
+        rubricFile: rubricFile ?? undefined,
+        consent,
+        title,
+        agentId: agentId || undefined,
+      });
       await calls.refetch();
       navigate(`/calls/${created.call_id}`);
     } catch (error) {
@@ -72,6 +82,26 @@ export function CallsPage() {
               onChange={(event) => setFile(event.target.files?.[0] ?? null)}
               className="mt-1 block w-full text-sm"
             />
+          </div>
+          <div>
+            <label htmlFor="rubric-file" className="text-sm font-bold">
+              {copy.calls.guidelinesLabel}
+            </label>
+            <p className="mt-1 text-sm text-muted">
+              {copy.calls.guidelinesHelp}
+            </p>
+            <input
+              id="rubric-file"
+              type="file"
+              accept=".yaml,.yml"
+              onChange={(event) => setRubricFile(event.target.files?.[0] ?? null)}
+              className="mt-1 block w-full text-sm"
+            />
+            {rubricFile ? (
+              <p className="mt-1 text-sm text-muted">
+                {copy.calls.selectedGuidelines(rubricFile.name)}
+              </p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="call-title" className="text-sm font-bold">{copy.calls.titleLabel}</label>

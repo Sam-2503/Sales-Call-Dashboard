@@ -9,7 +9,6 @@ export const queryKeys = {
   report: (callId: string) => ["report", callId] as const,
   job: (jobId: string) => ["job", jobId] as const,
   rubric: ["rubric"] as const,
-  playbook: ["playbook"] as const,
   feedback: (callId: string) => ["feedback", callId] as const,
   trendsScores: (filters: TrendsScoresFilters) => ["trends", "scores", filters] as const,
   weakSpots: (filters: WeakSpotsFilters) => ["trends", "weak-spots", filters] as const,

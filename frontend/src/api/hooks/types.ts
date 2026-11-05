@@ -19,7 +19,6 @@ export type Meta = {
   allowed_audio_extensions: string[];
   retention_days: number;
   max_reanalyses_per_call: number;
-  grounding: boolean;
   demo_available: boolean;
   pipeline_version: string;
   rubric: { id: string; version: string };
@@ -27,18 +26,8 @@ export type Meta = {
     analysis: string;
     fast: string;
     transcribe: string;
-    embedding: string;
   };
   quota_remaining: number | null;
-};
-
-export type PlaybookMetadata = {
-  available: boolean;
-  reason?: string;
-  title?: string | null;
-  author?: string | null;
-  edition?: string | null;
-  chunk_count?: number;
 };
 
 export type TrendPoint = {

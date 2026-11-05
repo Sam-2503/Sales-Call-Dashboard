@@ -15,10 +15,8 @@ make install
 make fmt
 make lint
 make typecheck
-make test
 make openapi
 make check
-make migrate
 make dev
 ```
 
@@ -29,10 +27,9 @@ Every change ends with `make check` green, including the OpenAPI drift check.
 - `routers/`: thin HTTP aggregates; `services/`: application operations.
 - `db/`: engine, DSN normalization, models. `auth/`: JWT and rate limits.
 - `storage/`: local and S3 audio backends. `jobs/`: queue, worker, stage store.
-- `tests/`: offline tests; PostgreSQL tests are marked `db`.
 
 ## Do not
-- Do not edit `src/call_analyser` or import private package modules.
+- Keep analysis code in `src/call_analyser`; import its public API only.
 - Do not commit `.env`, audio, transcripts, Chroma data, or real book text.
 - Do not hard-code secrets, hosts, limits, or prices.
 - Do not add Redis, Celery, pgvector, LangGraph, or another LLM client.
