@@ -41,13 +41,13 @@ make test
 ```
 
 Tests run offline and must not touch the network, real audio, or a real book.
-Cases marked `@pytest.mark.live` are skipped unless `GEMINI_API_KEY` is set.
+Cases marked `@pytest.mark.live` are skipped unless `XAI_API_KEY` is set.
 `make check` runs ruff, strict mypy over `src/`, and the test suite.
 
 ## Analysis flow
 
 1. Validate and normalize the uploaded audio.
-2. Transcribe it with the configured Gemini adapter.
+2. Transcribe it with xAI's Grok speech-to-text endpoint.
 3. Derive deterministic audio and conversation metrics.
 4. Evaluate the transcript against the configured rubric.
 5. Verify model evidence against exact transcript turns.

@@ -35,7 +35,7 @@ def test_playbook_is_unavailable_without_an_index() -> None:
     assert response.status_code == 200
     assert response.json() == {
         "available": False,
-        "reason": "playbook index is not available",
+        "reason": "grounding is disabled",
     }
 
 

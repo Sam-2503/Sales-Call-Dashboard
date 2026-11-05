@@ -128,10 +128,12 @@ async def _invoke(
     model = config.get("configurable", {}).get("analysis_model") or get_chat_model(
         "analysis", active
     )
+
     async def call() -> BaseModel:
         return await ainvoke_structured(
             model, schema, [HumanMessage(content=_prompt(stage, input_value))], config
         )
+
     active_semaphore = semaphore or config.get("configurable", {}).get("_stage_semaphore")
     if active_semaphore is None:
         return await call()
@@ -174,15 +176,13 @@ async def customer_signals(input: AnalysisInput, config: RunnableConfig) -> Cust
     """Extract customer signals while retaining only model-supplied turn references."""
     result = await _invoke("customer_signals", CustomerSignalsDraft, input, config)
     draft = CustomerSignalsDraft.model_validate(result)
-    turn_ids = [
-        point.turn_id for point in draft.sentiment_arc
-    ] + [item.turn_id for item in draft.unanswered_questions]
+    turn_ids = [point.turn_id for point in draft.sentiment_arc] + [
+        item.turn_id for item in draft.unanswered_questions
+    ]
     turn_ids += [item.turn_id for item in draft.buying_signals]
     turn_ids += [item.turn_id for item in draft.commitments]
     turn_ids += [item.raised_turn_id for item in draft.objections]
-    turn_ids += [
-        item.resolution_turn_id for item in draft.objections if item.resolution_turn_id
-    ]
+    turn_ids += [item.resolution_turn_id for item in draft.objections if item.resolution_turn_id]
     _validate_turns_and_items(input, turn_ids, [])
     return draft
 
@@ -193,13 +193,25 @@ async def run_analysis_stages(
     """Run the independent judgement stages concurrently under one semaphore."""
     semaphore = asyncio.Semaphore(Settings().llm_max_concurrency)
     return await asyncio.gather(
-        rubric_results.ainvoke(input_value, {**config, "configurable": {
-            **config.get("configurable", {}), "_stage_semaphore": semaphore
-        }}),
-        missed_moments.ainvoke(input_value, {**config, "configurable": {
-            **config.get("configurable", {}), "_stage_semaphore": semaphore
-        }}),
-        customer_signals.ainvoke(input_value, {**config, "configurable": {
-            **config.get("configurable", {}), "_stage_semaphore": semaphore
-        }}),
+        rubric_results.ainvoke(
+            input_value,
+            {
+                **config,
+                "configurable": {**config.get("configurable", {}), "_stage_semaphore": semaphore},
+            },
+        ),
+        missed_moments.ainvoke(
+            input_value,
+            {
+                **config,
+                "configurable": {**config.get("configurable", {}), "_stage_semaphore": semaphore},
+            },
+        ),
+        customer_signals.ainvoke(
+            input_value,
+            {
+                **config,
+                "configurable": {**config.get("configurable", {}), "_stage_semaphore": semaphore},
+            },
+        ),
     )

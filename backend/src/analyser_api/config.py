@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Literal, Self, cast
 
 from call_analyser.config import Settings as PackageSettings
-from pydantic import Field, field_validator, model_validator
+from pydantic import AliasChoices, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -77,9 +77,19 @@ class Settings(BaseSettings):
     storage_dir: Path = Path("data/audio")
     s3_bucket: str | None = None
     s3_endpoint_url: str | None = None
-    s3_region: str = "auto"
-    s3_access_key_id: str | None = Field(default=None, repr=False)
-    s3_secret_access_key: str | None = Field(default=None, repr=False)
+    s3_region: str = Field(
+        default="auto", validation_alias=AliasChoices("S3_REGION", "AWS_REGION")
+    )
+    s3_access_key_id: str | None = Field(
+        default=None,
+        repr=False,
+        validation_alias=AliasChoices("S3_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"),
+    )
+    s3_secret_access_key: str | None = Field(
+        default=None,
+        repr=False,
+        validation_alias=AliasChoices("S3_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"),
+    )
     playbook_artifact_prefix: str | None = None
 
     # Worker and event delivery.

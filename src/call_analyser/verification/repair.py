@@ -34,7 +34,5 @@ async def repair_evidence(input: RepairInput, config: RunnableConfig) -> RepairR
         f"Rejection: {input.request.rejection_reason}\n"
         f"Transcript context:\n{input.request.context}"
     )
-    result = await ainvoke_structured(
-        model, RepairResponse, [HumanMessage(content=prompt)], config
-    )
+    result = await ainvoke_structured(model, RepairResponse, [HumanMessage(content=prompt)], config)
     return RepairResponse.model_validate(result)

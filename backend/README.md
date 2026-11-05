@@ -72,8 +72,8 @@ make seed-demo
 ```
 
 `FAKE_MODE=true` uses the scripted package runner, so uploads work offline and
-produce an `insufficient_data` report. Live calls need `GEMINI_API_KEY` and a
-published/readable playbook index.
+produce an `insufficient_data` report. Live calls need `XAI_API_KEY`; playbook
+grounding is optional and disabled by default.
 
 ## Commands
 
@@ -123,9 +123,18 @@ is configured.
 
 ### Neon
 
-Use the **pooled** host in `DATABASE_URL` and the **direct** host in
-`DATABASE_URL_DIRECT`. Set `DB_POOLER=true` for transaction pooling; the engine
-disables prepared-statement caches. `analyser-api migrate` uses the direct DSN.
+Use the **pooled** Neon connection string in `DATABASE_URL` and set
+`DB_POOLER=true`; the engine disables prepared-statement caches for pooled
+connections. `DATABASE_URL_DIRECT` is optional and is used only for migrations.
+If Neon shows only one connection string, leave `DATABASE_URL_DIRECT` unset;
+migrations automatically use `DATABASE_URL`. Keep Neon’s query parameters,
+including `sslmode=require`.
+
+For deployment, set `ENVIRONMENT=prod`, `DATABASE_URL`, `DB_POOLER=true`, a
+`JWT_SECRET` of at least 32 random characters, and `XAI_API_KEY`. Add
+`DATABASE_URL_DIRECT` only if Neon provides a separate non-pooled URL. Run
+`make migrate` once before starting the service; the Docker image runs this
+automatically before serving.
 
 ### S3-compatible storage
 
@@ -133,6 +142,47 @@ Set `STORAGE_BACKEND=s3`, `S3_BUCKET`, `S3_ENDPOINT_URL`, `S3_REGION`, and
 credentials. Audio keys are `{workspace_id}/{call_id}/original.{ext}`; the
 client filename is never used as a key. The bucket stays private; media is
 streamed through the API with a short-lived signed token.
+
+For Hugging Face Spaces, do not rely on `STORAGE_BACKEND=local`: the Space
+filesystem is ephemeral. Neon Object Storage exposes an S3-compatible
+endpoint, so the existing adapter can use the `call-recordings` bucket:
+
+```dotenv
+STORAGE_BACKEND=s3
+S3_BUCKET=call-recordings
+AWS_REGION=<neon-region>
+AWS_ACCESS_KEY_ID=<access-key>
+AWS_SECRET_ACCESS_KEY=<secret-key>
+```
+
+Copy the region, access key, and secret shown by Neon in the Object Storage
+`.env` tab. Neon uses the standard S3 API, so no custom `S3_ENDPOINT_URL` is
+needed. The backend accepts both these standard `AWS_*` names and the older
+`S3_*` names.
+The bucket credentials need object `Get`, `Put`, `Delete`, `Head`, and
+prefix-list access. Keep the bucket private; the API serves short-lived
+authenticated media URLs. The backend's existing `S3Storage` implementation
+handles upload, range reads for audio playback, deletion, and health checks.
+
+### JWT secret
+
+Generate it locally and store it only in `.env` or the deployment secret store:
+
+```bash
+openssl rand -base64 48
+```
+
+Set the output as `JWT_SECRET`. Production rejects missing or
+shorter-than-32-character secrets. Changing it invalidates existing workspace
+tokens.
+
+### xAI/Grok and playbook configuration
+
+Set `XAI_API_KEY` as a backend/deployment secret. It is read by the
+`call_analyser` package and never sent to the browser. For the simplest live
+setup without playbook grounding, set `PLAYBOOK_GROUNDING=off`; the committed
+`playbooks/example.yaml` is metadata only and has no source PDF. To enable
+grounding, provide a real private playbook and a matching indexed artifact.
 
 ### Playbook artifact
 

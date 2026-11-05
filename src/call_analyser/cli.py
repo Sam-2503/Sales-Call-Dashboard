@@ -19,5 +19,5 @@ def main() -> None:
 @app.command("settings")
 def show_settings() -> None:
     """Print effective non-secret configuration."""
-    payload = Settings().model_dump(exclude={"gemini_api_key"}, mode="json")
+    payload = Settings().model_dump(exclude={"xai_api_key"}, mode="json")
     typer.echo(json.dumps(payload, indent=2, sort_keys=True, default=str))

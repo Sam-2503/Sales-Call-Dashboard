@@ -45,9 +45,12 @@ def _chapter_chunks(
 ) -> list[PlaybookChunk]:
     paragraphs: list[tuple[int, str]] = []
     for page, text in chapter.paragraphs:
-        paragraphs.extend((page, piece) for piece in _split_paragraph(
-            text, settings.chunk_max_tokens, settings.token_estimate_factor
-        ))
+        paragraphs.extend(
+            (page, piece)
+            for piece in _split_paragraph(
+                text, settings.chunk_max_tokens, settings.token_estimate_factor
+            )
+        )
     chunks: list[PlaybookChunk] = []
     start = 0
     ordinal = 0
@@ -57,16 +60,19 @@ def _chapter_chunks(
         while index < len(paragraphs):
             candidate = selected + [paragraphs[index]]
             candidate_text = " ".join(text for _, text in candidate)
-            if selected and _estimate(
-                candidate_text, settings.token_estimate_factor
-            ) > settings.chunk_target_tokens:
+            if (
+                selected
+                and _estimate(candidate_text, settings.token_estimate_factor)
+                > settings.chunk_target_tokens
+            ):
                 break
             selected = candidate
             index += 1
             selected_text = " ".join(text for _, text in selected)
-            if _estimate(
-                selected_text, settings.token_estimate_factor
-            ) >= settings.chunk_target_tokens:
+            if (
+                _estimate(selected_text, settings.token_estimate_factor)
+                >= settings.chunk_target_tokens
+            ):
                 break
         if not selected:
             selected = [paragraphs[start]]
@@ -77,17 +83,19 @@ def _chapter_chunks(
             f"{pdf_sha256}|{CHUNKER_VERSION}|{chapter.title}|{ordinal}|{digest}".encode()
         ).hexdigest()[:16]
         embedding_text = f"{spec.title} | {chapter.title}\n{text}"
-        chunks.append(PlaybookChunk(
-            id=chunk_id,
-            text=text,
-            embedding_text=embedding_text,
-            book_slug=spec.slug,
-            chapter=chapter.title,
-            page_start=min(page for page, _ in selected),
-            page_end=max(page for page, _ in selected),
-            ordinal=ordinal,
-            token_estimate=_estimate(text, settings.token_estimate_factor),
-        ))
+        chunks.append(
+            PlaybookChunk(
+                id=chunk_id,
+                text=text,
+                embedding_text=embedding_text,
+                book_slug=spec.slug,
+                chapter=chapter.title,
+                page_start=min(page for page, _ in selected),
+                page_end=max(page for page, _ in selected),
+                ordinal=ordinal,
+                token_estimate=_estimate(text, settings.token_estimate_factor),
+            )
+        )
         ordinal += 1
         if index >= len(paragraphs):
             break

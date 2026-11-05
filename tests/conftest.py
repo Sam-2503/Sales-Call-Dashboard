@@ -9,9 +9,9 @@ import pytest
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
     """Skip network-backed tests unless the operator supplied a key."""
-    if os.environ.get("GEMINI_API_KEY"):
+    if os.environ.get("XAI_API_KEY"):
         return
-    skip = pytest.mark.skip(reason="GEMINI_API_KEY is not set")
+    skip = pytest.mark.skip(reason="XAI_API_KEY is not set")
     for item in items:
         if "live" in item.keywords:
             item.add_marker(skip)

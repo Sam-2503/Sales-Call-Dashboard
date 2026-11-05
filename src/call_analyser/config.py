@@ -15,12 +15,13 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # Model selection and LLM call policy.
-    gemini_api_key: str | None = Field(default=None, repr=False)
-    chat_provider: str = "google_genai"
-    analysis_model: str = "gemini-2.5-pro"
-    fast_model: str = "gemini-2.5-flash"
-    transcribe_model: str = "gemini-2.5-flash"
-    embedding_model: str = "gemini-embedding-001"
+    xai_api_key: str | None = Field(default=None, repr=False)
+    chat_provider: str = "xai"
+    # Lowest-cost current xAI text model; use one model to keep routing simple.
+    analysis_model: str = "grok-4.20-0309-non-reasoning"
+    fast_model: str = "grok-4.20-0309-non-reasoning"
+    transcribe_model: str = "grok-voice-transcribe-2.0"
+    embedding_model: str = "unavailable"
     llm_max_concurrency: int = Field(default=4, ge=1)
     llm_max_retries: int = Field(default=2, ge=0)
     llm_timeout_s: float = Field(default=60, gt=0)
@@ -32,6 +33,7 @@ class Settings(BaseSettings):
     min_words: int = Field(default=150, ge=0)
     transcribe_inline_max_mb: float = Field(default=15, gt=0)
     transcribe_max_output_tokens: int = Field(default=16_384, ge=1)
+    llm_max_output_tokens: int = Field(default=4096, ge=1)
     role_probe_seconds: float = Field(default=90, gt=0)
     turn_gap_s: float = Field(default=1.5, ge=0)
     fake_mode: bool = False
@@ -56,7 +58,7 @@ class Settings(BaseSettings):
     # Findings, selection, and grounding.
     max_missed_moments: int = Field(default=10, ge=1)
     max_excerpt_words: int = Field(default=25, ge=1)
-    playbook_grounding: Literal["on", "off"] = "on"
+    playbook_grounding: Literal["on", "off"] = "off"
 
     # Playbook extraction, indexing, and retrieval.
     chroma_path: Path = Path("data/chroma")

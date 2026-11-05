@@ -1,5 +1,5 @@
 """Transcription adapters."""
 
-from call_analyser.transcription.gemini import GeminiTranscriber
+from call_analyser.transcription.xai import XAITranscriber
 
-__all__ = ["GeminiTranscriber"]
+__all__ = ["XAITranscriber"]

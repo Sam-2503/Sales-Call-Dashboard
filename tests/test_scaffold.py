@@ -52,11 +52,11 @@ def test_transcript_logging_requires_opt_in() -> None:
 
 
 def test_cli_settings_excludes_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("GEMINI_API_KEY", "not-a-real-key")
+    monkeypatch.setenv("XAI_API_KEY", "not-a-real-key")
     result = CliRunner().invoke(app, ["settings"])
     assert result.exit_code == 0
     payload = json.loads(result.stdout)
-    assert "gemini_api_key" not in payload
+    assert "xai_api_key" not in payload
     assert payload["dead_air_s"] == 3.0
 
 

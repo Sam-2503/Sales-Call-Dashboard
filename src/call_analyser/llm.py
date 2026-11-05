@@ -1,4 +1,4 @@
-"""The sole Stage 2 boundary for constructing and observing Gemini chat models."""
+"""The sole Stage 2 boundary for constructing and observing xAI chat models."""
 
 from __future__ import annotations
 
@@ -32,6 +32,8 @@ def get_chat_model(role: ModelRole, settings: Settings | None = None) -> Any:
         temperature=0,
         max_retries=active.llm_max_retries,
         timeout=active.llm_timeout_s,
+        max_tokens=active.llm_max_output_tokens,
+        api_key=active.xai_api_key,
     )
 
 

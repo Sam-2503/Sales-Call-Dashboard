@@ -44,8 +44,10 @@ def confidence_bucket(attempt: int, score: float, model_confidence: float) -> st
 def _candidate(finding: Any) -> tuple[str, str, str | None] | None:
     evidence = getattr(finding, "evidence", None)
     if evidence is not None:
-        return evidence.turn_id, evidence.quote, getattr(evidence, "role", None) or getattr(
-            finding, "role", None
+        return (
+            evidence.turn_id,
+            evidence.quote,
+            getattr(evidence, "role", None) or getattr(finding, "role", None),
         )
     turn_id = getattr(finding, "turn_id", None)
     quote = getattr(finding, "quote", None)
@@ -137,9 +139,7 @@ def verify_and_repair(
                 break
             result = verify_finding(repaired, transcript, attempt=attempt, settings=settings)
             finding = repaired
-        if result.verified or (
-            getattr(finding, "status", None) == "missed" and result.reason
-        ):
+        if result.verified or (getattr(finding, "status", None) == "missed" and result.reason):
             outcome.verified.append(result)
         else:
             outcome.unverified_count += 1

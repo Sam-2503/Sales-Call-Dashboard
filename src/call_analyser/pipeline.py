@@ -6,7 +6,7 @@ import asyncio
 from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from langchain_core.runnables import RunnableConfig, chain
 from pydantic import BaseModel
@@ -24,6 +24,7 @@ from call_analyser.schemas import (
     MissedMoment,
     ReportMeta,
     RubricResult,
+    Transcript,
 )
 from call_analyser.schemas.events import ProgressEvent
 from call_analyser.schemas.report import DebugReport
@@ -38,7 +39,7 @@ from call_analyser.stages.analysis import (
     rubric_results,
 )
 from call_analyser.stages.grounding import ground_findings
-from call_analyser.transcription.gemini import GeminiTranscriber
+from call_analyser.transcription.xai import transcribe
 
 
 class AnalyseInput(BaseModel):
@@ -47,6 +48,8 @@ class AnalyseInput(BaseModel):
     playbook_path: Path | None = None
     agent_speaker: str | None = None
     grounding: bool = True
+
+
 def _evidence(transcript: Any, turn_id: str, quote: str, attempt: int = 0) -> Evidence:
     turn = next(turn for turn in transcript.turns if turn.id == turn_id)
     return Evidence(
@@ -131,7 +134,7 @@ async def analyse_call(input: AnalyseInput, config: RunnableConfig) -> CallRepor
             raise ValueError("playbook_path is required when grounding is enabled")
         index = PlaybookIndex.open(load_playbook_spec(input.playbook_path), settings)
     asset = ingest(input.audio_path, settings)
-    transcript = await GeminiTranscriber(settings).transcribe(asset)
+    transcript = cast(Transcript, await transcribe.ainvoke(asset, config))
     if (
         transcript.duration_s < settings.min_duration_s
         or sum(len(turn.words) for turn in transcript.turns) < settings.min_words
@@ -157,10 +160,13 @@ async def analyse_call(input: AnalyseInput, config: RunnableConfig) -> CallRepor
 
         missed_public = await ground_findings.ainvoke(
             missed_public,
-            {**config, "configurable": {
-                **config.get("configurable", {}),
-                "retriever": PlaybookRetriever(index=index),
-            }},
+            {
+                **config,
+                "configurable": {
+                    **config.get("configurable", {}),
+                    "retriever": PlaybookRetriever(index=index),
+                },
+            },
         )
     from call_analyser.stages.follow_up import deterministic_next_steps
 

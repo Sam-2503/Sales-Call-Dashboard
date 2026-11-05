@@ -14,7 +14,7 @@ from langchain_core.documents import Document
 from call_analyser.config import Settings
 from call_analyser.errors import PlaybookIndexMismatchError, PlaybookNotIndexedError
 from call_analyser.playbook.chunk import CHUNKER_VERSION, chunk_playbook
-from call_analyser.playbook.embedder import FakeEmbeddings, GeminiEmbeddings
+from call_analyser.playbook.embedder import FakeEmbeddings, XAIEmbeddings
 from call_analyser.playbook.extract import extract_playbook
 from call_analyser.playbook.spec import PlaybookSpec
 
@@ -46,11 +46,11 @@ def _write_manifest(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
-def _embedding(settings: Settings) -> FakeEmbeddings | GeminiEmbeddings:
+def _embedding(settings: Settings) -> FakeEmbeddings | XAIEmbeddings:
     return (
         FakeEmbeddings(settings.embedding_dim, settings.query_embed_cache_size)
         if settings.fake_mode
-        else GeminiEmbeddings(settings)
+        else XAIEmbeddings(settings)
     )
 
 
@@ -199,7 +199,5 @@ class PlaybookIndex:
     """Public index API; writes are available only through the explicit index command."""
 
     @staticmethod
-    def open(
-        spec: PlaybookSpec, settings: Settings | None = None
-    ) -> ReadOnlyPlaybookIndex:
+    def open(spec: PlaybookSpec, settings: Settings | None = None) -> ReadOnlyPlaybookIndex:
         return open_playbook(spec, settings)

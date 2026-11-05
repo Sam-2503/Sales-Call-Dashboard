@@ -31,9 +31,9 @@ def render_rubric(rubric: Rubric) -> str:
     """Render the complete rubric in stable order for model prompts."""
     lines = [
         f"Rubric: {rubric.name} (id={rubric.id}, version={rubric.version})",
-        "Scoring: " + ", ".join(
-            f"{status}={rubric.scoring[status]:g}"
-            for status in ("met", "partial", "missed")
+        "Scoring: "
+        + ", ".join(
+            f"{status}={rubric.scoring[status]:g}" for status in ("met", "partial", "missed")
         ),
     ]
     for category in rubric.categories:

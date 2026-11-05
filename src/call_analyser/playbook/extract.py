@@ -50,7 +50,8 @@ def _clean_page(text: str) -> str:
     for line in lines:
         if current and (
             current[-1].endswith((".", "!", "?"))
-            or chapter_heading.match(current[0]) and not chapter_heading.match(line)
+            or chapter_heading.match(current[0])
+            and not chapter_heading.match(line)
         ):
             paragraphs.append(" ".join(current))
             current = []
@@ -118,8 +119,7 @@ def extract_playbook(spec: PlaybookSpec, settings: Settings | None = None) -> Ex
         raise PlaybookExtractionError("playbook contains no non-skipped pages")
     if spec.chapters:
         ranges = [
-            (chapter.title, chapter.start_page, chapter.end_page)
-            for chapter in spec.chapters
+            (chapter.title, chapter.start_page, chapter.end_page) for chapter in spec.chapters
         ]
     else:
         ranges = _heuristic_chapters(pages)

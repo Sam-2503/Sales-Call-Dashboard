@@ -21,7 +21,7 @@ Configure these in **Settings → Secrets** (never commit them):
 - `DATABASE_URL` — Neon pooled PostgreSQL DSN.
 - `DATABASE_URL_DIRECT` — Neon direct DSN, used by `alembic` at container start.
 - `JWT_SECRET` — at least 32 random characters.
-- `GEMINI_API_KEY` — only if the playbook/analysis pipeline is enabled.
+- `XAI_API_KEY` — the xAI secret used for Grok analysis and transcription.
 - `S3_BUCKET`, `S3_ENDPOINT_URL`, `S3_ACCESS_KEY_ID`,
   `S3_SECRET_ACCESS_KEY`, `S3_REGION` — private S3-compatible storage.
 - `PLAYBOOK_ARTIFACT_PREFIX` — private prefix containing `latest.json` and the
@@ -35,4 +35,4 @@ Configure these in **Settings → Secrets** (never commit them):
   only where the app needs them.
 - Space disk is ephemeral. Audio lives in S3, and the Chroma directory is
   restored from the private artifact at startup; it is never rebuilt per call.
-- Set `FAKE_MODE=true` only for an offline demo; live analysis needs Gemini.
+- Set `FAKE_MODE=true` only for an offline demo; live analysis needs xAI.
