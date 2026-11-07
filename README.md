@@ -1,3 +1,9 @@
+---
+title: Sales Call Analyser
+sdk: docker
+app_port: 7860
+---
+
 # Sales Call Analyser
 
 An evidence-backed dashboard for reviewing sales-call recordings. A user
@@ -82,16 +88,16 @@ validation and normalization.
 All application routes are under `/api/v1` and require the workspace bearer
 token unless noted. Create a workspace first with `POST /workspaces`.
 
-| Area | Endpoints |
-|---|---|
-| Workspace | `POST /workspaces`, `POST /workspaces/demo`, `GET /me`, `DELETE /me` |
-| Calls | `POST /calls`, `GET /calls`, `GET /calls/{id}`, `DELETE /calls/{id}`, `POST /calls/{id}/reanalyse` |
-| Jobs | `GET /jobs/{id}`, `GET /jobs/{id}/events`, retry/cancel call jobs |
-| Reports/media | `GET /calls/{id}/report`, `GET /calls/{id}/audio-url`, `GET /media/audio` |
-| Feedback | `GET /calls/{id}/feedback`, `PUT/DELETE /calls/{id}/feedback/{finding_id}` |
-| Rubric/meta | `GET /rubric`, `GET /meta` |
-| Progress | `GET /trends/scores`, `GET /trends/weak-spots`, `GET /benchmarks` |
-| Agents | `GET/POST /agents`, `PATCH /agents/{id}` |
+| Area          | Endpoints                                                                                          |
+| ------------- | -------------------------------------------------------------------------------------------------- |
+| Workspace     | `POST /workspaces`, `POST /workspaces/demo`, `GET /me`, `DELETE /me`                               |
+| Calls         | `POST /calls`, `GET /calls`, `GET /calls/{id}`, `DELETE /calls/{id}`, `POST /calls/{id}/reanalyse` |
+| Jobs          | `GET /jobs/{id}`, `GET /jobs/{id}/events`, retry/cancel call jobs                                  |
+| Reports/media | `GET /calls/{id}/report`, `GET /calls/{id}/audio-url`, `GET /media/audio`                          |
+| Feedback      | `GET /calls/{id}/feedback`, `PUT/DELETE /calls/{id}/feedback/{finding_id}`                         |
+| Rubric/meta   | `GET /rubric`, `GET /meta`                                                                         |
+| Progress      | `GET /trends/scores`, `GET /trends/weak-spots`, `GET /benchmarks`                                  |
+| Agents        | `GET/POST /agents`, `PATCH /agents/{id}`                                                           |
 
 Unauthenticated operational routes are `/healthz` and `/readyz`. The complete
 request/response contract is the committed
