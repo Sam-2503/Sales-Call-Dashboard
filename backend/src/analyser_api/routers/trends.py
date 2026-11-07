@@ -6,7 +6,6 @@ from datetime import datetime
 from typing import Annotated, Any
 from uuid import UUID
 
-from call_analyser.schemas.rubric import Rubric
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import case, distinct, func, select
 
@@ -18,6 +17,7 @@ from analyser_api.db.models import (
     Report,
 )
 from analyser_api.deps import Database, Workspace, get_rubric, get_settings
+from call_analyser.schemas.rubric import Rubric
 
 router = APIRouter(prefix="/api/v1", tags=["trends"])
 

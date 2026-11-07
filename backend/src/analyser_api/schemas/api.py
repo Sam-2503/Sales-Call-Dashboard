@@ -6,8 +6,9 @@ from datetime import datetime
 from typing import Any, Literal
 from uuid import UUID
 
-from call_analyser.schemas.report import CallReport
 from pydantic import BaseModel, Field
+
+from call_analyser.schemas.report import CallReport
 
 
 class WorkspaceResponse(BaseModel):

@@ -13,9 +13,6 @@ from pathlib import Path
 from typing import Annotated
 from uuid import UUID, uuid4
 
-from call_analyser.errors import RubricError
-from call_analyser.schemas.report import CallReport
-from call_analyser.stages.follow_up import deterministic_next_steps
 from fastapi import (
     APIRouter,
     Depends,
@@ -49,6 +46,9 @@ from analyser_api.schemas.api import (
     ReportResponse,
 )
 from analyser_api.services.quotas import check_call_quota, check_reanalysis_quota
+from call_analyser.errors import RubricError
+from call_analyser.schemas.report import CallReport
+from call_analyser.stages.follow_up import deterministic_next_steps
 
 router = APIRouter(prefix="/api/v1", tags=["calls"])
 MEDIA_TYPES = {
@@ -545,9 +545,7 @@ async def get_call_report(call_id: UUID, workspace_id: Workspace, db: Database) 
     if parsed.status == "ok" and (
         parsed.next_steps is None or not parsed.next_steps.follow_up_message
     ):
-        parsed.next_steps = deterministic_next_steps(
-            parsed.customer_signals, parsed.missed_moments
-        )
+        parsed.next_steps = deterministic_next_steps(parsed.customer_signals, parsed.missed_moments)
         payload = parsed.model_dump(mode="json")
         report.report = payload
         await db.commit()

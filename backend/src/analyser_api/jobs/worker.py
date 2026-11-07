@@ -10,7 +10,6 @@ from contextlib import suppress
 from pathlib import Path
 from uuid import UUID
 
-from call_analyser.schemas.events import ProgressEvent
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from analyser_api.config import Settings
@@ -25,6 +24,7 @@ from analyser_api.services.quotas import check_budget
 from analyser_api.services.reports import persist_report
 from analyser_api.storage.base import AudioStorage
 from analyser_api.storage.factory import create_storage
+from call_analyser.schemas.events import ProgressEvent
 
 ReadyCheck = Callable[[], Awaitable[bool]]
 

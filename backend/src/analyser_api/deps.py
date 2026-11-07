@@ -8,7 +8,6 @@ from typing import Annotated, cast
 from uuid import UUID
 
 import jwt
-from call_analyser.schemas.rubric import Rubric
 from fastapi import Depends, Header, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,6 +19,7 @@ from analyser_api.db.session import session_dependency
 from analyser_api.errors import error_response, request_id_for
 from analyser_api.logging import set_workspace_id
 from analyser_api.storage.base import AudioStorage
+from call_analyser.schemas.rubric import Rubric
 
 
 def get_settings(request: Request) -> Settings:

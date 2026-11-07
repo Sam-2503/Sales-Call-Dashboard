@@ -82,9 +82,7 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("S3_ENDPOINT_URL", "AWS_ENDPOINT_URL"),
     )
-    s3_region: str = Field(
-        default="auto", validation_alias=AliasChoices("S3_REGION", "AWS_REGION")
-    )
+    s3_region: str = Field(default="auto", validation_alias=AliasChoices("S3_REGION", "AWS_REGION"))
     s3_access_key_id: str | None = Field(
         default=None,
         repr=False,

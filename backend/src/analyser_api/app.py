@@ -7,7 +7,6 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from call_analyser.rubric import load_rubric
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -35,6 +34,7 @@ from analyser_api.logging import RequestContextMiddleware, configure_logging
 from analyser_api.routers import admin, agents, calls, feedback, jobs, meta, trends, workspaces
 from analyser_api.services.janitor import Janitor
 from analyser_api.storage.factory import create_storage
+from call_analyser.rubric import load_rubric
 
 _OPERATION_IDS = {
     "create_workspace": "createWorkspace",

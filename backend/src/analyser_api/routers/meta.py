@@ -5,13 +5,13 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Annotated, Any
 
-from call_analyser.schemas.rubric import Rubric
 from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
 
 from analyser_api.config import Settings
 from analyser_api.db.models import Call
 from analyser_api.deps import Database, OptionalWorkspace, get_rubric, get_settings
+from call_analyser.schemas.rubric import Rubric
 
 router = APIRouter(prefix="/api/v1", tags=["meta"])
 

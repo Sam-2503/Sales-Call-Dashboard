@@ -5,7 +5,6 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import UUID
 
-from call_analyser.schemas.report import CallReport
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -16,6 +15,7 @@ from analyser_api.db.models import (
     Report,
     ReportFinding,
 )
+from call_analyser.schemas.report import CallReport
 
 
 def _estimate_cost(report: CallReport) -> float | None:
